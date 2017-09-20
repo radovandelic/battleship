@@ -29,9 +29,17 @@ var gameState = [
    Submarine - 3 hits
    Patrol boat - 2 hits
 */ 
-
-var score = 0;
-//if we hit, we want to add 5 points. if we miss we deduct 1
+function hasGameEnded(hits){
+    if (hits === 17){
+        alert("Congrats, you won!");
+       var tds = document.getElementsByTagName("td");
+       for (var i = 0; i < tds.length; i++){
+           tds[i].onclick = function(){
+                alert("The game has finished!"); 
+           }
+       }
+   }
+}
 
 function createGameBoard(){
     var gameBoard = document.getElementById("gameBoard");
@@ -64,6 +72,7 @@ function populateGameBoard(gameState) {
 
 function play(cell) {
     var score = Number(document.getElementById("score").innerHTML);
+    var hits = Number(document.getElementById("hits").innerHTML);
     var col = cell.getAttribute("col");
     var row = cell.parentElement.getAttribute("row");
     if (gameState[row][col] == null) {
@@ -72,6 +81,8 @@ function play(cell) {
             gameState[row][col] = "x";
             cell.innerHTML = "x";
             score += 5;
+            hits += 1;
+            hasGameEnded(hits);
         } else {
             gameState[row][col] = "_";
             score -= 1;
@@ -81,6 +92,7 @@ function play(cell) {
     }
     populateGameBoard(gameState);
     document.getElementById("score").innerHTML = score;
+    document.getElementById("hits").innerHTML = hits;
 }
 
 window.onload = function (){
