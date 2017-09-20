@@ -37,6 +37,7 @@ function createGameBoard(){
         for (var j = 0; j < 10; j++) {
             var tableData = document.createElement("td");
             tableData.setAttribute("col", j);
+            tableData.setAttribute("onclick", "play(this)");
             tableData.innerHTML = shipData[i][j];
             tableRow.appendChild(tableData);
         }
@@ -48,14 +49,32 @@ function populateGameBoard(gameState) {
     var gameBoard = document.getElementById("gameBoard");
     for (var i = 0; i < gameState.length; i++) {
         var row = gameBoard.children[i];
-        console.log(row);
+        //console.log(row);
         for (var j= 0; j < gameState[i].length; j++) {
             var col = row.children[j];
-            console.log(col);
+            //console.log(col);
             col.innerHTML = gameState[i][j];
         }
     }
 }
+
+function play(cell) {
+    var col = cell.getAttribute("col");
+    var row = cell.parentElement.getAttribute("row");
+    if (gameState[row][col] == null) {
+        if (shipData[row][col] == "x") {
+            alert("Hit!");
+            gameState[row][col] = "x";
+            cell.innerHTML = "x";
+        } else {
+            gameState[row][col] = "_";
+        } 
+    } else {
+        
+    }
+    populateGameBoard(gameState);
+}
+
 window.onload = function (){
     createGameBoard();
 };
