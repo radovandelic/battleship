@@ -1,0 +1,27 @@
+header {    
+      width: 80%;    
+      margin: 0 auto;    
+      text-align: center;    
+    }
+    
+    
+    
+    .container {    
+      width: 80%;    
+      margin: 0 auto;    
+    }        
+    
+    table {    
+      border-collapse: collapse;    
+      width: 100%;    
+      margin: 0 auto;    
+    }
+    
+    
+    
+    td {
+    padding: 1em 1.5em;    
+      border: 1px solid black;    
+      text-align: center;
+    
+    }
