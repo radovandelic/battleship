@@ -20,7 +20,7 @@ function readData(column, id, todo, object) {
                 todo();
             } else {
                 object[column] = isNaN(this.responseText.trim()) ?
-                    JSON.parse(this.responseText) : this.responseText;
+                    JSON.parse(this.responseText) : Number(this.responseText.trim());
                 todo();
             }
         }

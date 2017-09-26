@@ -64,20 +64,12 @@ var ships = {
         hits: 2
     }
 };
-function hasGameEnded(hits) {
-    if (player.hits >= 17) {
+function hasGameEnded(object) {
+    if (object.hits >= 17) {
         resetData();
-        alert("Congrats, you won!");
-        var tds = document.getElementsByTagName("td");
-        for (var i = 0; i < tds.length; i++) {
-            tds[i].onclick = function () {
-                alert("The game has finished!");
-            }
-        }
-    }
-    if (opponent.hits >= 17) {
-        resetData();
-        alert("You lose!");
+        message = (object.id == player.id) ?
+            "Congrats, you win!" : "You lose!";
+        alert(message);
         var tds = document.getElementsByTagName("td");
         for (var i = 0; i < tds.length; i++) {
             tds[i].onclick = function () {
@@ -111,7 +103,10 @@ function populateGameBoard(gameState, gameBoard) {
         for (var j = 0; j < gameState[i].length; j++) {
             var col = row.children[j];
             //console.log(col);
-            if (gameBoard.getAttribute("id") == "gameBoard2") { col.innerHTML = gameState[i][j]; }
+            if (gameBoard.getAttribute("id") == "gameBoard2"
+                || (player.shipData[i][j] == null && gameState[i][j] != null)) {
+                col.innerHTML = gameState[i][j];
+            }
             if (gameState[i][j] != null && gameState[i][j] != "_") { col.setAttribute("class", "hit"); col.innerHTML = "x"; }
             else if (gameState[i][j] == "_") { col.setAttribute("class", "miss"); }
         }
@@ -145,22 +140,28 @@ function update() {
     if (opponent.active == 0) {
         readData("active", opponent.id, opponentJoin, opponent);
     } else {
-        readData("turn", opponent.id, activityHandling, opponent);
         readData("gameState", player.id, opponentMove, player);
+        readData("turn", opponent.id, writeGameProgress, opponent);
     }
-    writeGameProgress();
+    //activityHandling();
 }
 function opponentMove() {
+    if ((player.turn + player.id) <= opponent.turn) { label.innerHTML = "Your turn"; }
+    else { label.innerHTML = "Opponent's turn"; }
     populateGameBoard(player.gameState, "gameBoard");
+}
+function calcScore() {
+    opponent.score = opponent.hits * 5 + opponent.hits - opponent.turn;
 }
 
 function writeGameProgress() {
+    readData("hits", opponent.id, calcScore, opponent);
     score.innerHTML = player.score;
     hits.innerHTML = player.hits;
-    turn.innerHTML = player.turn+1;
+    turn.innerHTML = (player.turn + 1);
     opscore.innerHTML = opponent.score;
     ophits.innerHTML = opponent.hits;
-    opturn.innerHTML = opponent.turn+1;
+    opturn.innerHTML = (opponent.turn + 1);
 }
 
 function play(cell) {
@@ -180,15 +181,18 @@ function play(cell) {
                 ship.hits--;
                 if (ship.hits == 0) { alert("You sunk my " + ship.name + "!"); }
 
-                hasGameEnded(hits);
+                hasGameEnded(opponent);
+                hasGameEnded(player);
             } else {
                 opponent.gameState[row][col] = "_";
                 cell.setAttribute("class", "miss");
                 player.score -= 1;
             }
             player.turn++;
+            label.innerHTML = "Opponent's turn.";
             writeData("turn", player.id, player.turn);
-            writeData("gamestate", opponent.id, opponent.gameState);
+            writeData("gamestate", opponent.id, JSON.stringify(opponent.gameState));
+            writeData("hits", player.id, player.hits);
             writeGameProgress();
         }
         populateGameBoard(opponent.gameState, "gameBoard2");
