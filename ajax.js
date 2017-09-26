@@ -1,22 +1,44 @@
-function writeData(str) {
-    if (str == "") {
-        document.getElementById("startButton").innerHTML = "";
-        return;
-    } else {
-        if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+function writeData(column, id, value) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            //console.log(this.responseText);//
+            dbwrite = this.responseText;
         }
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("startButton").innerHTML = this.responseText;
-                console.log(this.responseText);
+    };
+    xmlhttp.open("GET", "write.php?column=" + column + "&id=" + id + "&value=" + value, true);
+    xmlhttp.send();
+}
+
+function readData(column, id, todo, object) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            //console.log(this.responseText);//
+            if (object == undefined) {
+                dbactive = this.responseText;
+                todo();
+            } else {
+                object[column] = isNaN(this.responseText.trim()) ?
+                    JSON.parse(this.responseText) : this.responseText;
+                todo();
             }
-        };
-        xmlhttp.open("GET","write.php?q="+str,true);
-        xmlhttp.send();
-    }
+        }
+    };
+    xmlhttp.open("GET", "read.php?column=" + column + "&id=" + id, true);
+    xmlhttp.send();
+
+}
+
+function resetData() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);//
+            dbwrite = this.responseText;
+        }
+    };
+    xmlhttp.open("GET", "reset.php");
+    xmlhttp.send();
+    return;
 }

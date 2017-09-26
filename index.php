@@ -7,49 +7,36 @@
     <meta http-equiv="X-UA-Compatible">
     <title>Battleship</title>
     <link rel="stylesheet" href="style.css">
-    <<script src="ajax.js"></script>
 </head>
 
 <body>
-
-<?php
-$mysqli = new mysqli("localhost", "root", "jUhl6b9wbNmrtWL", "battleship");
-
-/* check connection */
-if (mysqli_connect_errno()) {
-    echo "Connect failed: %s\n", mysqli_connect_error();
-    exit();
-}
-
-$query = "SELECT * from test;";
-
-if ($result = $mysqli->query($query)) {
-
-    /* fetch object array */
-    while ($row = $result->fetch_row()) {
-        echo "$row[0]";
-    }
-
-    /* free result set */
-    $result->close();
-}
-
-/* close connection */
-$mysqli->close();
-?>
-
     <header>
         <h1>Battleship</h1>
     </header>
-    <p>Score: <span id="score">0</span></p>
-    <p>Hits: <span id="hits">0</span></p>
     <div class="container">
-        <table id="gameBoard">
+        <div style="float: left" class="left">
+            <p>Score: <span id="score"></span></p>
+            <p>Hits: <span id="hits"></span></p>
+            <p>Turn: <span id="turn"></span></p>
+            <h4>Your board:</h4>
+            <table id="gameBoard">
 
-        </table>
-        <button id="startButton">Start</button>
+            </table>    <br>
+            <label id="label"></label>    <br>
+            <button id="startButton">Start</button> <button id="randomButton">Random Board</button> 
+        </div>
+        <div style="float: right" class="right">
+            <p>Score: <span id="opscore"></span></p>
+            <p>Hits: <span id="ophits"></span></p>
+            <p>Turn: <span id="opturn"></span></p>
+            <h4>Opponent's board:</h4>
+            <table id="gameBoard2">
+
+            </table>
+        </div>
     </div>
     <script src="app.js"></script>
+    <script src="ajax.js"></script>
 </body>
 
 </html>
