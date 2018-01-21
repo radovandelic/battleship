@@ -40,9 +40,17 @@ $app->get('/', function() use($app) {
 $app->get('/read/', function() use($app) {
     $column = $_GET['column'];
     //echo $column;
+    $st = $app['pdo']->prepare('SELECT name FROM test_table');
+    $st->execute();
+    $names = array();
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['name']);
+        $names[] = $row;
+    }
+
     $response = new Response();
     
-    $response->setContent('<html><body><h1>' . $column .' world!</h1></body></html>');
+    $response->setContent($names[0]);
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
@@ -50,9 +58,6 @@ $app->get('/read/', function() use($app) {
     
     // print the HTTP headers followed by the content
     $response->send();
-
-    /*$column = $_GET['column'];
-    return new Response($column)->send();*/
 });
 
 $app->get('/db/', function() use($app) {
