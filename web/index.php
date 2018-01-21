@@ -38,7 +38,7 @@ $app->get('/', function() use($app) {
 
 $app->get('/read/', function() use($app) {
     $column = $_GET['column'];
-    return new Response($column);
+    return new Response($column)->send();
 });
 
 $app->get('/db/', function() use($app) {
