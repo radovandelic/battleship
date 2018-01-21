@@ -43,6 +43,7 @@
         }
       });
       
+    $app->run();
     ?>
     <div class="container">
         <div style="float: left" class="left">
