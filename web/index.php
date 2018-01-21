@@ -60,6 +60,55 @@ $app->get('/read/', function() use($app) {
     $response->send();
 });
 
+$app->get('/write/', function() use($app) {
+    $column = $_GET['column'];
+    $id = intval($_GET['id']);
+    $value = $_GET['value'];
+    if(!is_numeric($value)) { $value = "'$value'"; }
+
+    $query = "UPDATE gamedata SET $column = $value WHERE id = $id;";
+
+    $st = $app['pdo']->prepare($query);
+    $st->execute();
+    $data = null;
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['name']);
+        $data = $row[$column];
+    }
+
+    $response = new Response();
+    $response->setContent($data);
+    $response->setStatusCode(Response::HTTP_OK);
+    
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+    
+    // print the HTTP headers followed by the content
+    $response->send();
+});
+
+$app->get('/reset/', function() use($app) {
+    $query = $sql = "UPDATE gamedata SET active = 0, turn = 0, hits = 0, shipdata = '[]', gamestate = '[]';";
+
+    $st = $app['pdo']->prepare($query);
+    $st->execute();
+    $data = null;
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['name']);
+        $data = $row[$column];
+    }
+
+    $response = new Response();
+    $response->setContent($data);
+    $response->setStatusCode(Response::HTTP_OK);
+    
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+    
+    // print the HTTP headers followed by the content
+    $response->send();
+});
+
 $app->get('/db/', function() use($app) {
   $st = $app['pdo']->prepare('SELECT name FROM test_table');
   $st->execute();
