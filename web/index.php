@@ -42,7 +42,7 @@ $app->get('/read/', function() use($app) {
     $query = "SELECT * from gamedata WHERE id = $id;";
     $st = $app['pdo']->prepare($query);
     $st->execute();
-    $data = new stdClass();
+    $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Row ' . $row['username']);
         $data[] = $row;
