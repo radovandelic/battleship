@@ -22,10 +22,9 @@ function readData(id, who, todo) {
                 player = JSON.parse(this.responseText);
             }
         }
-    }
-};
-xmlhttp.open("GET", "read/?id=" + id, true);
-xmlhttp.send();
+    };
+    xmlhttp.open("GET", "read/?id=" + id, true);
+    xmlhttp.send();
 
 }
 
