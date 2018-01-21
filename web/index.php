@@ -39,10 +39,10 @@ $app->get('/', function() use($app) {
 
 $app->get('/read/', function() use($app) {
     $column = $_GET['column'];
-    echo $column;
+    //echo $column;
     $response = new Response();
     
-    $response->setContent('<html><body><h1>Hello world!</h1></body></html>');
+    $response->setContent('<html><body><h1>' . $column .' world!</h1></body></html>');
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
