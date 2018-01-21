@@ -38,7 +38,7 @@ $app->get('/', function() use($app) {
 
 $app->get('/read/', function() use($app) {
     $column = $_GET['column'];
-    echo $column
+    echo $column;
 });
 
 $app->get('/db/', function() use($app) {
