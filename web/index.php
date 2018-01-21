@@ -84,7 +84,19 @@ $app->get('/write/', function() use($app) {
 });
 
 $app->get('/reset/', function() use($app) {
-    $query = $sql = "UPDATE gamedata SET active = 0, turn = 0, hits = 0, score = 0, shipdata = '[]', gamestate = '[]', timeout = 0;";
+    $init = [
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null]
+  ];
+    $query = $sql = "UPDATE gamedata SET active = 0, turn = 0, hits = 0, score = 0, shipdata = '$init', gamestate = '$init', timeout = 0;";
 
     $st = $app['pdo']->prepare($query);
     $st->execute();

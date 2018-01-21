@@ -6,7 +6,7 @@ function writeData(column, id, value) {
             dbwrite = this.responseText;
         }
     };
-    xmlhttp.open("GET", "write/?column=" + column + "&id=" + id + "&value=" + value, true);
+    xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/write/?column=" + column + "&id=" + id + "&value=" + value, true);
     xmlhttp.send();
 }
 
@@ -14,16 +14,16 @@ function readData(id, who, todo) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(JSON.parse(this.responseText));
 
             if (who === 'opponent') {
                 opponent = JSON.parse(this.responseText);
             } else {
                 player = JSON.parse(this.responseText);
             }
+            if (todo) todo();
         }
     };
-    xmlhttp.open("GET", "read/?id=" + id, true);
+    xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/read/?id=" + id, true);
     xmlhttp.send();
 
 }

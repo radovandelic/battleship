@@ -198,7 +198,7 @@ function play(cell) {
             writeData("hits", player.id, player.hits);
             writeGameProgress();
         }
-        populateGameBoard(opponent.gameState, "gameBoard2");
+        populateGameBoard(opponent.gamestate, "gameBoard2");
     } else {
         alert("Wait your turn!");
     }
@@ -247,12 +247,6 @@ function opponentJoin() {
 }
 
 window.onload = function () {
-    for (let index = 0; index < 10; index++) {
-        setTimeout(() => {
-            writeData('gamestate', index, JSON.stringify(init));
-        }, 1000);
-
-    }
     var label = document.getElementById("label");
     var turn = document.getElementById("turn");
     var score = document.getElementById("score");
@@ -261,9 +255,9 @@ window.onload = function () {
     var opscore = document.getElementById("opscore");
     var ophits = document.getElementById("ophits");
     var opturn = document.getElementById("opturn");
-    createGameBoard("gameBoard", player.shipData);
+    createGameBoard("gameBoard", player.shipdata);
     createGameBoard("gameBoard2", init);
-    populateGameBoard(opponent.gameState, "gameBoard2");
+    populateGameBoard(opponent.gamestate, "gameBoard2");
 
 
 };
@@ -277,9 +271,9 @@ randomButton.onclick = function () {
 var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
     if (JSON.stringify(player.shipData) == JSON.stringify(init)) { randomShipData(); }
-    createGameBoard("gameBoard", player.shipData);
-    if (opponent.active == 1) { createGameBoard("gameBoard2", opponent.shipData); }
-    populateGameBoard(opponent.gameState, "gameBoard2");
+    createGameBoard("gameBoard", player.shipdata);
+    if (opponent.active == 1) { createGameBoard("gameBoard2", opponent.shipdata); }
+    populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
     readData(0, 'player', startGame);
@@ -301,7 +295,7 @@ function startGame() {
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gameState));
         var int = setInterval(update, 500);
     } else {
-        readData("active", 1, startOpponentPresent);
+        readData(1, 'player', startOpponentPresent);
     }
 }
 function cgb() {
@@ -320,7 +314,7 @@ function startOpponentPresent() {
         writeData("active", player.id, 1);
         writeData("shipdata", player.id, JSON.stringify(player.shipData));
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gameState));
-        readData("shipData", opponent.id, cgb, opponent);
+        readData(opponent.id, 'opponent', cgb);
         opponent.active = 1;
         var int = setInterval(update, 500);
     }
