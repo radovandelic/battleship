@@ -38,17 +38,16 @@ $app->get('/', function() use($app) {
 });
 
 $app->get('/read/', function() use($app) {
-    $column = $_GET['column'];
     $id = intval($_GET['id']);
-    $query = "SELECT $column from gamedata WHERE id = $id;";
+    $query = "SELECT * from gamedata WHERE id = $id;";
     $st = $app['pdo']->prepare($query);
     $st->execute();
-    $data = null;
+    $data = new stdClass();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row[$column]);
-        $data = $row[$column];
+        $app['monolog']->addDebug('Row ' . $row['username']);
+        $data[] = $row;
     }
-
+    $data = json_encode($data);
     $response = new Response();
     $response->setContent($data);
     $response->setStatusCode(Response::HTTP_OK);
