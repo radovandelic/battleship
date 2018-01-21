@@ -39,17 +39,18 @@ $app->get('/', function() use($app) {
 
 $app->get('/read/', function() use($app) {
     $column = $_GET['column'];
-    //echo $column;
-    $st = $app['pdo']->prepare('SELECT name FROM test_table');
+    $id = intval($_GET['id']);
+    $query = "SELECT $column from gamedata WHERE id = $id;";
+    $st = $app['pdo']->prepare($query);
     $st->execute();
-    $names = array();
+    $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Row ' . $row['name']);
-        $names[] = $row;
+        $data = $row[$column];
     }
 
     $response = new Response();
-    $response->setContent($names[0]['name']);
+    $response->setContent($data);
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
