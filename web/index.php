@@ -30,7 +30,7 @@ $app->get('/', function() use($app) {
                    )
                )
     );
-    $app->get('/db/', function() use($app) {
+    $app->get('/db', function() use($app) {
         $app['monolog']->addDebug('logging output.');
         $st = $app['pdo']->prepare('SELECT name FROM test_table');
         $st->execute();
