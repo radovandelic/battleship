@@ -15,22 +15,25 @@ var init = [
 ];
 var player = {
     id: -1,
+    username: "",
     active: 0,
     turn: 0,
     hits: 0,
     score: 0,
-    shipData: JSON.parse(JSON.stringify(init)),
-    gameState: JSON.parse(JSON.stringify(init))
+    shipdata: JSON.parse(JSON.stringify(init)),
+    gamestate: JSON.parse(JSON.stringify(init)),
+    timeout: 0
 };
 
 var opponent = {
     id: -1,
+    username: "",
     active: 0,
     turn: 0,
     hits: 0,
     score: 0,
-    shipData: JSON.parse(JSON.stringify(init)),
-    gameState: JSON.parse(JSON.stringify(init)),
+    shipdata: JSON.parse(JSON.stringify(init)),
+    gamestate: JSON.parse(JSON.stringify(init)),
     timeout: 0
 };
 
@@ -133,15 +136,15 @@ function KO() {
 
 function activityHandling() {
     writeData("active", player.id, 1);
-    if (Math.random > 0.5) { readData("active", opponent.id, KO, opponent); }
+    if (Math.random > 0.5) { readData(opponent.id, 'opponent', KO); }
 }
 
 function update() {
     if (opponent.active == 0) {
-        readData("active", opponent.id, opponentJoin, opponent);
+        readData(opponent.id, 'opponent', opponentJoin);
     } else {
-        readData("gameState", player.id, opponentMove, player);
-        readData("turn", opponent.id, writeGameProgress, opponent);
+        readData(player.id, 'player', opponentMove);
+        readData(opponent.id, 'opponent', writeGameProgress);
     }
     //activityHandling();
 }
@@ -155,7 +158,7 @@ function calcScore() {
 }
 
 function writeGameProgress() {
-    readData("hits", opponent.id, calcScore, opponent);
+    readData(opponent.id, 'opponent', calcScore);
     score.innerHTML = player.score;
     hits.innerHTML = player.hits;
     turn.innerHTML = (player.turn + 1);
@@ -237,14 +240,19 @@ function randomShip(ship, size) {
 }
 function opponentJoin() {
     if (opponent.active == 1) {
-        readData("shipData", opponent.id, cgb, opponent);
+        readData(opponent.id, 'opponent', cgb);
         alert("Opponent has joined the game. You have the first turn.");
         label.innerHTML = "Game has started";
     }
 }
 
 window.onload = function () {
-    readData(0);
+    for (let index = 0; index < 10; index++) {
+        setTimeout(() => {
+            writeData('shipdata', index, JSON.stringify(init));
+        }, 1000);
+
+    }
     var label = document.getElementById("label");
     var turn = document.getElementById("turn");
     var score = document.getElementById("score");
@@ -274,7 +282,7 @@ startButton.onclick = function () {
     populateGameBoard(opponent.gameState, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
-    readData("active", 0, startGame);
+    readData(0, 'player', startGame);
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
     populateGameBoard(gameState, "gameBoard2");

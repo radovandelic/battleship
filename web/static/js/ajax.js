@@ -10,26 +10,22 @@ function writeData(column, id, value) {
     xmlhttp.send();
 }
 
-function readData(id, todo, who) {
+function readData(id, who, todo) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log(JSON.parse(this.responseText));
 
-            /*if (object == undefined) {
-                dbactive = this.responseText;
-                todo();
+            if (who === 'opponent') {
+                opponent = JSON.parse(this.responseText);
             } else {
-                if (who === 'opponent') {
-                    opponent = JSON.parse(this.responseText);
-                } else {
-                    player = JSON.parse(this.responseText);
-                }
-            }*/
+                player = JSON.parse(this.responseText);
+            }
         }
-    };
-    xmlhttp.open("GET", "read/?id=" + id, true);
-    xmlhttp.send();
+    }
+};
+xmlhttp.open("GET", "read/?id=" + id, true);
+xmlhttp.send();
 
 }
 
