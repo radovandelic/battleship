@@ -244,6 +244,7 @@ function opponentJoin() {
 }
 
 window.onload = function () {
+    readData(0);
     var label = document.getElementById("label");
     var turn = document.getElementById("turn");
     var score = document.getElementById("score");

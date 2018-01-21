@@ -10,12 +10,13 @@ function writeData(column, id, value) {
     xmlhttp.send();
 }
 
-function readData(column, id, todo, who) {
+function readData(id, todo, who) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);//
-            if (object == undefined) {
+            console.log(this.responseText);
+
+            /*if (object == undefined) {
                 dbactive = this.responseText;
                 todo();
             } else {
@@ -24,7 +25,7 @@ function readData(column, id, todo, who) {
                 } else {
                     player = JSON.parse(this.responseText);
                 }
-            }
+            }*/
         }
     };
     xmlhttp.open("GET", "read/?column=" + column + "&id=" + id, true);
