@@ -70,14 +70,9 @@ $app->get('/write/', function() use($app) {
 
     $st = $app['pdo']->prepare($query);
     $st->execute();
-    $data = null;
-    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row[0]);
-        $data = $row[$column];
-    }
 
     $response = new Response();
-    $response->setContent($data);
+    $response->setContent("New record created successfully.");
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
@@ -94,7 +89,7 @@ $app->get('/reset/', function() use($app) {
     $st->execute();
 
     $response = new Response();
-    $response->setContent("New record created successfully.");
+    $response->setContent("Server succesfully reset.");
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
