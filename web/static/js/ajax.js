@@ -28,7 +28,7 @@ function readData(id, todo, who) {
             }*/
         }
     };
-    xmlhttp.open("GET", "read/?column=" + column + "&id=" + id, true);
+    xmlhttp.open("GET", "read/?id=" + id, true);
     xmlhttp.send();
 
 }
