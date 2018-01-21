@@ -6,7 +6,7 @@ function writeData(column, id, value) {
             dbwrite = this.responseText;
         }
     };
-    xmlhttp.open("GET", "write.php?column=" + column + "&id=" + id + "&value=" + value, true);
+    xmlhttp.open("GET", "php/write.php?column=" + column + "&id=" + id + "&value=" + value, true);
     xmlhttp.send();
 }
 
@@ -25,7 +25,7 @@ function readData(column, id, todo, object) {
             }
         }
     };
-    xmlhttp.open("GET", "read.php?column=" + column + "&id=" + id, true);
+    xmlhttp.open("GET", "php/read.php?column=" + column + "&id=" + id, true);
     xmlhttp.send();
 
 }
@@ -38,7 +38,7 @@ function resetData() {
             dbwrite = this.responseText;
         }
     };
-    xmlhttp.open("GET", "reset.php");
+    xmlhttp.open("GET", "php/reset.php");
     xmlhttp.send();
     return;
 }

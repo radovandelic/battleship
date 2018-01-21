@@ -1,5 +1,6 @@
 
 <?php
+ header("Access-Control-Allow-Origin: *");
 include 'db.php'; //contains $mysqli = new mysqli("localhost", "username", "password", "databasename");
 $column = $_GET['column'];
 $id = intval($_GET['id']);

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible">
     <title>Battleship</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 
 <body>
@@ -21,9 +21,10 @@
             <h4>Your board:</h4>
             <table id="gameBoard">
 
-            </table>    <br>
-            <label id="label"></label>    <br>
-            <button id="startButton">Start</button> <button id="randomButton">Random Board</button> 
+            </table> <br>
+            <label id="label"></label> <br>
+            <button id="startButton">Start</button>
+            <button id="randomButton">Random Board</button>
         </div>
         <div style="float: right" class="right">
             <p>Score: <span id="opscore"></span></p>
@@ -35,8 +36,8 @@
             </table>
         </div>
     </div>
-    <script src="app.js"></script>
-    <script src="ajax.js"></script>
+    <script src="static/js/app.js"></script>
+    <script src="static/js/ajax.js"></script>
 </body>
 
 </html>

@@ -255,6 +255,8 @@ window.onload = function () {
     createGameBoard("gameBoard", player.shipData);
     createGameBoard("gameBoard2", init);
     populateGameBoard(opponent.gameState, "gameBoard2");
+
+
 };
 var randomButton = document.getElementById("randomButton");
 randomButton.onclick = function () {
