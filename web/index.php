@@ -1,6 +1,7 @@
 <?php
 
 require('../vendor/autoload.php');
+use Symfony\Component\HttpFoundation\Response;
 
 $app = new Silex\Application();
 $app['debug'] = true;
@@ -37,8 +38,19 @@ $app->get('/', function() use($app) {
 });
 
 $app->get('/read/', function() use($app) {
-    $column = $_GET['column'];
-    return new Response($column)->send();
+    $response = new Response();
+    
+    $response->setContent('<html><body><h1>Hello world!</h1></body></html>');
+    $response->setStatusCode(Response::HTTP_OK);
+    
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+    
+    // print the HTTP headers followed by the content
+    $response->send();
+
+    /*$column = $_GET['column'];
+    return new Response($column)->send();*/
 });
 
 $app->get('/db/', function() use($app) {
