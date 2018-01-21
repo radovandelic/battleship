@@ -30,7 +30,7 @@
                    )
                )
     );
-    $app->run();
+    //$app->run();
 
     $st = $app['pdo']->prepare('SELECT name FROM test_table');
     $st->execute();
