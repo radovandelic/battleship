@@ -249,7 +249,7 @@ function opponentJoin() {
 window.onload = function () {
     for (let index = 0; index < 10; index++) {
         setTimeout(() => {
-            writeData('shipdata', index, JSON.stringify(init));
+            writeData('gamestate', index, JSON.stringify(init));
         }, 1000);
 
     }
