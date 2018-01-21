@@ -38,8 +38,6 @@
           echo $row['name'];
           $names[] = $row;
         }
-      
-        ));
       });
       
     ?>
