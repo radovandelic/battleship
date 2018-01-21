@@ -45,9 +45,11 @@ $app->get('/read/', function() use($app) {
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Row ' . $row['username']);
-        $data = $row;
+        $row['shipdata'] = json_decode($row['shipdata']);
+        $row['gamestate'] = json_decode($row['gamestate']);
+        $data = json_encode($row);
     }
-    $data = json_encode($data);
+    
     $response = new Response();
     $response->setContent($data);
     $response->setStatusCode(Response::HTTP_OK);

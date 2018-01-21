@@ -10,7 +10,7 @@ function writeData(column, id, value) {
     xmlhttp.send();
 }
 
-function readData(column, id, todo, object) {
+function readData(column, id, todo, who) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -19,9 +19,11 @@ function readData(column, id, todo, object) {
                 dbactive = this.responseText;
                 todo();
             } else {
-                object[column] = isNaN(this.responseText.trim()) ?
-                    JSON.parse(this.responseText) : Number(this.responseText.trim());
-                todo();
+                if (who === 'opponent') {
+                    opponent = JSON.parse(this.responseText);
+                } else {
+                    player = JSON.parse(this.responseText);
+                }
             }
         }
     };
