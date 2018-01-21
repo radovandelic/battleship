@@ -45,7 +45,7 @@ $app->get('/read/', function() use($app) {
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Row ' . $row['username']);
-        $data[] = $row;
+        $data = $row;
     }
     $data = json_encode($data);
     $response = new Response();
