@@ -14,6 +14,8 @@
         <h1>Battleship</h1>
     </header>
     <?php    
+    require('../vendor/autoload.php');
+    $app = new Silex\Application();
     $dbopts = parse_url(getenv('DATABASE_URL'));
     echo $dbopts["pass"];
     $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
@@ -41,6 +43,7 @@
         }
       });
       
+    $app->run();
     ?>
     <div class="container">
         <div style="float: left" class="left">
