@@ -15,9 +15,13 @@ function readData(id, who, todo) {
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
-            if (who === 'opponent') {
+            if (who === 'start') {
+                var object = JSON.parse(this.responseText);
+                dbactive = object.active == 0 ? 0 : dbactive;
+            } else if (who === 'opponent') {
                 opponent = JSON.parse(this.responseText);
             } else {
+
                 player = JSON.parse(this.responseText);
             }
             if (todo) todo();
