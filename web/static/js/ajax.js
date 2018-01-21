@@ -2,7 +2,7 @@ function writeData(column, id, value) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            //console.log(this.responseText);//
+            console.log(this.responseText);//
             dbwrite = this.responseText;
         }
     };
@@ -14,7 +14,7 @@ function readData(column, id, todo, object) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            //console.log(this.responseText);//
+            console.log(this.responseText);//
             if (object == undefined) {
                 dbactive = this.responseText;
                 todo();
