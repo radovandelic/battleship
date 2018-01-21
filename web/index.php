@@ -45,7 +45,7 @@ $app->get('/read/', function() use($app) {
     $st->execute();
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row['name']);
+        $app['monolog']->addDebug('Row ' . $row[$column]);
         $data = $row[$column];
     }
 
@@ -72,7 +72,7 @@ $app->get('/write/', function() use($app) {
     $st->execute();
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row['name']);
+        $app['monolog']->addDebug('Row ' . $row[0]);
         $data = $row[$column];
     }
 
@@ -94,7 +94,7 @@ $app->get('/reset/', function() use($app) {
     $st->execute();
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row['name']);
+        $app['monolog']->addDebug('Row ' . $row[0]);
         $data = $row[$column];
     }
 
