@@ -15,7 +15,8 @@
     </header>
     <?php    
     $dbopts = parse_url(getenv('DATABASE_URL'));
-    $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
+    echo getenv('DATABASE_URL');
+    /*$app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
                array(
                 'pdo.server' => array(
                    'driver'   => 'pgsql',
@@ -38,7 +39,7 @@
           echo $row['name'];
           $names[] = $row;
         }
-      });
+      });*/
       
     ?>
     <div class="container">
