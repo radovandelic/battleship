@@ -30,7 +30,7 @@ $app->get('/', function() use($app) {
                    )
                )
     );
-    $app->get('/db', function() use($app) {
+    $app->get('/db/', function() use($app) {
         echo 'so far so good';
         $app['monolog']->addDebug('logging output.');
         $st = $app['pdo']->prepare('SELECT name FROM test_table');
@@ -41,10 +41,10 @@ $app->get('/', function() use($app) {
           $app['monolog']->addDebug('Row ' . $row['name']);
           $names[] = $row;
         }
-      
-        return $app['twig']->render('db.twig', array(
+        echo $names;
+        /* return $app['twig']->render('db.twig', array(
           'names' => $names
-        ));
+        )); */
       });
       
 $app->run();
