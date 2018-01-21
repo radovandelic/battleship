@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php    
+require('../vendor/autoload.php');
+$app = new Silex\Application();
+$app['debug'] = true;
+// Register the monolog logging service
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+  'monolog.logfile' => 'php://stderr',
+));
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible">
-    <title>Battleship</title>
-    <link rel="stylesheet" href="static/css/style.css">
-</head>
+// Register view rendering
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/views',
+));
 
-<body>
-    <header>
-        <h1>Battleship</h1>
-    </header>
-    <?php    
-    require('../vendor/autoload.php');
-    $app = new Silex\Application();
+// Our web handlers
+$app->get('/', function() use($app) {
+  $app['monolog']->addDebug('logging output.');
+  return $app['twig']->render('index.twig');
+});
     $dbopts = parse_url(getenv('DATABASE_URL'));
     echo $dbopts["pass"];
     $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
@@ -30,56 +31,20 @@
                    )
                )
     );
-    //$app->run();
-
-    $st = $app['pdo']->prepare('SELECT name FROM test_table');
-    $st->execute();
-      
-    $names = array();
-    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-      $app['monolog']->addDebug('Row ' . $row['name']);
-      echo $row['name'];
-      $names[] = $row;
-    }
-
-   /*  $app->get('/db/', function() use($app) {
+    $app->get('/db/', function() use($app) {
         $st = $app['pdo']->prepare('SELECT name FROM test_table');
         $st->execute();
       
         $names = array();
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
           $app['monolog']->addDebug('Row ' . $row['name']);
-          echo $row['name'];
           $names[] = $row;
         }
-      }); */
       
+        return $app['twig']->render('db.twig', array(
+          'names' => $names
+        ));
+      });
+      
+$app->run();
     ?>
-    <div class="container">
-        <div style="float: left" class="left">
-            <p>Score: <span id="score"></span></p>
-            <p>Hits: <span id="hits"></span></p>
-            <p>Turn: <span id="turn"></span></p>
-            <h4>Your board:</h4>
-            <table id="gameBoard">
-
-            </table> <br>
-            <label id="label"></label> <br>
-            <button id="startButton">Start</button>
-            <button id="randomButton">Random Board</button>
-        </div>
-        <div style="float: right" class="right">
-            <p>Score: <span id="opscore"></span></p>
-            <p>Hits: <span id="ophits"></span></p>
-            <p>Turn: <span id="opturn"></span></p>
-            <h4>Opponent's board:</h4>
-            <table id="gameBoard2">
-
-            </table>
-        </div>
-    </div>
-    <script src="static/js/app.js"></script>
-    <script src="static/js/ajax.js"></script>
-</body>
-
-</html>
