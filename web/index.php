@@ -18,7 +18,6 @@ $app->get('/', function() use($app) {
   return $app['twig']->render('index.twig');
 });
     $dbopts = parse_url(getenv('DATABASE_URL'));
-    echo $dbopts["pass"];
     $app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
                array(
                 'pdo.server' => array(
@@ -45,6 +44,7 @@ $app->get('/', function() use($app) {
           'names' => $names
         ));
       });
+      echo $dbopts["pass"];
       
 $app->run();
     ?>
