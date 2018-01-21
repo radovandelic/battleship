@@ -49,7 +49,7 @@ $app->get('/read/', function() use($app) {
     }
 
     $response = new Response();
-    $response->setContent($names['name']);
+    $response->setContent($names[0]['name']);
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
