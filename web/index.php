@@ -123,19 +123,19 @@ $app->post('/visit/', function () use ($app) {
     $content = $request->getContent();
     $json = json_decode($content);
 
-    /*$location = $_POST['location'];
-    $page = $_POST['page'];
-    $browser = $_POST['browser'];
-    $time = $_POST['time'];*/
+    $location = $json->location;
+    $page = $json->page;
+    $browser = $json->browser;
+    $time = $json->time;
 
-    /*$query = "INSERT INTO visitors (location, page, browser, time) VALUES";
+    $query = "INSERT INTO visitors (location, page, browser, time) VALUES";
     $query .= " ('$location', '$page', '$browser', '$time');";
 
     $st = $app['pdo']->prepare($query);
-    $st->execute();*/
+    $st->execute();
 
     $response = new Response();
-    $response->setContent(json_encode($json->time));
+    $response->setContent("New record created successfully.\n" . json_encode($json));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header
