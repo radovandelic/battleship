@@ -116,10 +116,7 @@ $app->get('/reset/', function () use ($app) {
 $app->post('/visit/', function () use ($app) {
 
     $request = Request::createFromGlobals();
-    // the URI being requested (e.g. /about) minus any query parameters
-    //$request->getPathInfo();
 
-    // retrieve $_GET and $_POST variables respectively
     $content = $request->getContent();
     $json = json_decode($content);
 
