@@ -148,7 +148,7 @@ $app->get('/visits/', function () use ($app) {
     $st->execute();
     $visits = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row['location']);
+        $app['monolog']->addDebug('Row ' . $row['ip']);
         $visits[] = $row;
     }
     return $app['twig']->render('visits.twig', array(
