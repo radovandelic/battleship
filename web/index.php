@@ -117,10 +117,10 @@ $app->post('/visit/', function () use ($app) {
 
     $request = Request::createFromGlobals();
     // the URI being requested (e.g. /about) minus any query parameters
-    $request->getPathInfo();
+    //$request->getPathInfo();
 
     // retrieve $_GET and $_POST variables respectively
-    $content = $request->request->get('body');
+    //$content = $request->request->get('body');
 
     /*$location = $_POST['location'];
     $page = $_POST['page'];
