@@ -120,7 +120,7 @@ $app->post('/visit/', function () use ($app) {
     //$request->getPathInfo();
 
     // retrieve $_GET and $_POST variables respectively
-    $content = $request->request->get('location');
+    $content = $request->getContent();
 
     /*$location = $_POST['location'];
     $page = $_POST['page'];
