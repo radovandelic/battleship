@@ -113,6 +113,8 @@ $app->get('/reset/', function() use($app) {
 });
 
  $app->post('/visit/', function() use($app) {
+
+    $content = $this->get("request")->getContent();
     /*$location = $_POST['location'];
     $page = $_POST['page'];
     $browser = $_POST['browser'];
@@ -125,7 +127,7 @@ $app->get('/reset/', function() use($app) {
     $st->execute();*/
 
     $response = new Response();
-    $response->setContent($_POST['body']);
+    $response->setContent($content);
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
