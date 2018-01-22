@@ -133,7 +133,7 @@ $app->post('/visit/', function () use ($app) {
     $st = $app['pdo']->prepare($query);
     $st->execute();*/
 
-    $response = new Response(json_encode($content));
+    $response = new Response("so far..");
     $response->setContent($content);
     $response->setStatusCode(Response::HTTP_OK);
 
