@@ -127,9 +127,10 @@ $app->post('/visit/', function () use ($app) {
     $page = $json->page;
     $browser = $json->browser;
     $time = $json->time;
+    $ip = $json->ip;
 
-    $query = "INSERT INTO visitors (location, page, browser, time) VALUES";
-    $query .= " ('$location', '$page', '$browser', '$time');";
+    $query = "INSERT INTO visits (location, page, browser, ip, time) VALUES";
+    $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
 
     $st = $app['pdo']->prepare($query);
     $st->execute();
@@ -145,16 +146,16 @@ $app->post('/visit/', function () use ($app) {
     $response->send();
 });
 
-$app->get('/visitors/', function () use ($app) {
-    $st = $app['pdo']->prepare('SELECT * FROM visitors;');
+$app->get('/visits/', function () use ($app) {
+    $st = $app['pdo']->prepare('SELECT * FROM visits;');
     $st->execute();
-    $visitors = array();
+    $visits = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Row ' . $row['location']);
-        $visitors[] = $row;
+        $visits[] = $row;
     }
-    return $app['twig']->render('visitors.twig', array(
-        'visitors' => $visitors,
+    return $app['twig']->render('visits.twig', array(
+        'visits' => $visits,
     ));
 });
 
