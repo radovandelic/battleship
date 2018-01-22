@@ -1,6 +1,6 @@
 
 <ul>
 {% for v in visitors %}
-  <li> {{ v.location }}, {{v.page ?: "unknown"}}, {{v.browser ?: "unknown"}}</li>
+  <li> {{ v.location ?: "unknown location" }}, {{v.page ?: "?"}}, {{v.browser ?: "unknown browser"}}, {{v.ip ?: "unknown ip"}}, {{v.time ?: "unknown date/time"}}</li>
 {% endfor %}
 </ul>s
