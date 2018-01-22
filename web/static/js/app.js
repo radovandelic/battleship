@@ -143,8 +143,8 @@ function update() {
     if (opponent.active == 0) {
         readData(opponent.id, 'opponent', opponentJoin);
     } else {
-        readData(player.id, 'player', opponentMove);
         readData(opponent.id, 'opponent', writeGameProgress);
+        readData(player.id, 'player', opponentMove);
     }
     //activityHandling();
 }
@@ -276,6 +276,7 @@ startButton.onclick = function () {
     populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
+    writeData("shipdata", player.id, JSON.stringify(player.shipdata));
     readData(0, 'start', startGame);
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
@@ -290,15 +291,16 @@ function startGame() {
         player.id = 0;
         opponent.id = 1;
         label.innerHTML = "Waiting for Player 2";
-        writeData("active", player.id, 1);
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
+        writeData("active", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
         var int = setInterval(update, 500);
     } else {
-        readData(1, 'player', startOpponentPresent);
+        startOpponentPresent();
     }
 }
 function cgb() {
+    if (player.id == 1) readData(player.id, 'player', console.log);
     createGameBoard("gameBoard2", opponent.shipdata);
     populateGameBoard(init, "gameBoard2");
 }
@@ -307,12 +309,13 @@ function startOpponentPresent() {
         alert("Sorry, server is full. Check back later.");
         label.innerHTML = "Server full";
     } else {
+        console.log(player.shipdata);
         player.id = 1;
         opponent.id = 0;
         alert("Game has started. Opponent has first turn.")
         label.innerHTML = "Game has started.";
-        writeData("active", player.id, 1);
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
+        writeData("active", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
         readData(opponent.id, 'opponent', cgb);
         opponent.active = 1;
