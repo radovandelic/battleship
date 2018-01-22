@@ -112,7 +112,7 @@ $app->get('/reset/', function() use($app) {
     $response->send();
 });
 
-/* $app->get('/visit/', function() use($app) {
+ $app->get('/visit/', function() use($app) {
     $location = $_GET['location'];
     $page = $_GET['page'];
     $browser = $_GET['browser'];
@@ -135,7 +135,7 @@ $app->get('/reset/', function() use($app) {
     $response->send();
 });
 
-$app->get('/visitors/', function() use($app) {
+/* $app->get('/visitors/', function() use($app) {
   $st = $app['pdo']->prepare('SELECT * FROM visitors;');
   $st->execute();
   $visitors = array();
