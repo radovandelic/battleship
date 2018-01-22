@@ -112,20 +112,20 @@ $app->get('/reset/', function() use($app) {
     $response->send();
 });
 
- $app->get('/visit/', function() use($app) {
-    $location = $_GET['location'];
-    $page = $_GET['page'];
-    $browser = $_GET['browser'];
-    $time = $_GET['time'];
+ $app->post('/visit/', function() use($app) {
+    $location = $_POST['location'];
+    $page = $_POST['page'];
+    $browser = $_POST['browser'];
+    $time = $_POST['time'];
 
-    $query = "INSERT INTO visitors (location, page, browser, time) VALUES";
+    /*$query = "INSERT INTO visitors (location, page, browser, time) VALUES";
     $query .= " ('$location', '$page', '$browser', '$time');";
 
-    $st = $app['pdo']->prepare($query);
+    $st = $app['pdo']->prepare($query);*/
     $st->execute();
 
     $response = new Response();
-    $response->setContent("New record created successfully.");
+    $response->setContent($location);
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
