@@ -153,19 +153,9 @@ $app->get('/visitors/', function () use ($app) {
         $app['monolog']->addDebug('Row ' . $row['location']);
         $visitors[] = $row;
     }
-
-    $response = new Response();
-    $response->setContent(json_encode($visitors));
-    $response->setStatusCode(Response::HTTP_OK);
-
-    // set a HTTP response header
-    $response->headers->set('Content-Type', 'text/html');
-
-    // print the HTTP headers followed by the content
-    $response->send();
-    /*return $app['twig']->render('visitors.twig', array(
-'visitors' => $visitors,
-));*/
+    return $app['twig']->render('visitors.twig', array(
+        'visitors' => $visitors,
+    ));
 });
 
 $app->run();
