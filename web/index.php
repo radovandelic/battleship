@@ -133,8 +133,8 @@ $app->post('/visit/', function () use ($app) {
     $st = $app['pdo']->prepare($query);
     $st->execute();*/
 
-    $response = new Response("so far..");
-    $response->setContent($content);
+    $response = new Response();
+    $response->setContent("so far..");
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header
