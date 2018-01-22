@@ -120,7 +120,7 @@ $app->post('/visit/', function () use ($app) {
     $request->getPathInfo();
 
     // retrieve $_GET and $_POST variables respectively
-    $request->request->get('body');
+    $content = $request->request->get('body');
 
     /*$location = $_POST['location'];
     $page = $_POST['page'];
@@ -133,7 +133,7 @@ $app->post('/visit/', function () use ($app) {
     $st = $app['pdo']->prepare($query);
     $st->execute();*/
 
-    $response = new Response(json_encode($request));
+    $response = new Response(json_encode($content));
     $response->setContent($content);
     $response->setStatusCode(Response::HTTP_OK);
 
