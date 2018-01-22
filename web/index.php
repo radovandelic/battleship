@@ -114,6 +114,7 @@ $app->get('/reset/', function () use ($app) {
 
 $app->post('/visit/', function () use ($app) {
 
+    $request = Request::createFromGlobals();
     // the URI being requested (e.g. /about) minus any query parameters
     $request->getPathInfo();
 
