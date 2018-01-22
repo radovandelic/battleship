@@ -112,18 +112,44 @@ $app->get('/reset/', function() use($app) {
     $response->send();
 });
 
-$app->get('/db/', function() use($app) {
-  $st = $app['pdo']->prepare('SELECT name FROM test_table');
+
+
+$app->get('/visit/', function() use($app) {
+    $location = $_GET['location'];
+    $page = $_GET['page'];
+    $browser = $_GET['browser'];
+    $time = $_GET['time'];
+
+    $query = "INSERT INTO visitors (location, page, browser, time) VALUES";
+    $query .= " ('$location', '$page', '$browser', '$time');";
+
+    $st = $app['pdo']->prepare($query);
+    $st->execute();
+
+    $response = new Response();
+    $response->setContent("New record created successfully.");
+    $response->setStatusCode(Response::HTTP_OK);
+    
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+    
+    // print the HTTP headers followed by the content
+    $response->send();
+});
+
+$app->get('/visitors/', function() use($app) {
+  $st = $app['pdo']->prepare('SELECT * FROM visitors;');
   $st->execute();
-  $names = array();
+  $visitors = array();
   while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-    $app['monolog']->addDebug('Row ' . $row['name']);
-    $names[] = $row;
+    $app['monolog']->addDebug('Row ' . $row['location']);
+    $visitors[] = $row;
   }
 
-  return $app['twig']->render('db.twig', array(
-    'names' => $names
+  return $app['twig']->render('visitors.twig', array(
+    'visitors' => $visitors
   ));
 });
 
 $app->run();
+?>
