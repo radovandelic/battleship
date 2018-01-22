@@ -145,18 +145,27 @@ $app->post('/visit/', function () use ($app) {
     $response->send();
 });
 
-/* $app->get('/visitors/', function() use($app) {
-$st = $app['pdo']->prepare('SELECT * FROM visitors;');
-$st->execute();
-$visitors = array();
-while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-$app['monolog']->addDebug('Row ' . $row['location']);
-$visitors[] = $row;
-}
+$app->get('/visitors/', function () use ($app) {
+    $st = $app['pdo']->prepare('SELECT * FROM visitors;');
+    $st->execute();
+    $visitors = array();
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['location']);
+        $visitors[] = $row;
+    }
 
-return $app['twig']->render('visitors.twig', array(
-'visitors' => $visitors
-));
-}); */
+    $response = new Response();
+    $response->setContent(json_encode($visitors));
+    $response->setStatusCode(Response::HTTP_OK);
+
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+
+    // print the HTTP headers followed by the content
+    $response->send();
+    /*return $app['twig']->render('visitors.twig', array(
+'visitors' => $visitors,
+));*/
+});
 
 $app->run();
