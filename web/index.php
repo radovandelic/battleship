@@ -112,7 +112,7 @@ $app->get('/reset/', function() use($app) {
     $response->send();
 });
 
-$app->get('/visit/', function() use($app) {
+/* $app->get('/visit/', function() use($app) {
     $location = $_GET['location'];
     $page = $_GET['page'];
     $browser = $_GET['browser'];
@@ -147,7 +147,6 @@ $app->get('/visitors/', function() use($app) {
   return $app['twig']->render('visitors.twig', array(
     'visitors' => $visitors
   ));
-});
+}); */
 
 $app->run();
-?>
