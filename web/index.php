@@ -115,7 +115,7 @@ $app->get('/reset/', function () use ($app) {
 $app->post('/visit/', function () use ($app) {
 
     // the URI being requested (e.g. /about) minus any query parameters
-    $content = $request->getPathInfo();
+    $content = new $request->getPathInfo();
 
     // retrieve $_GET and $_POST variables respectively
     //$content = $request->request->get('body');
