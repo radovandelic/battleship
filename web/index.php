@@ -120,7 +120,7 @@ $app->post('/visit/', function () use ($app) {
     //$request->getPathInfo();
 
     // retrieve $_GET and $_POST variables respectively
-    $content = $request->getContent();
+    $content = json_decode($request->getContent());
 
     /*$location = $_POST['location'];
     $page = $_POST['page'];
@@ -134,7 +134,7 @@ $app->post('/visit/', function () use ($app) {
     $st->execute();*/
 
     $response = new Response();
-    $response->setContent(json_encode($content));
+    $response->setContent(json_encode($content['location']));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header
