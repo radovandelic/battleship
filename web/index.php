@@ -134,7 +134,7 @@ $app->post('/visit/', function () use ($app) {
     $st->execute();*/
 
     $response = new Response();
-    $response->setContent($content);
+    $response->setContent(json_encode($content));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header
