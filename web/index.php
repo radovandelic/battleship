@@ -112,8 +112,6 @@ $app->get('/reset/', function() use($app) {
     $response->send();
 });
 
-
-
 $app->get('/visit/', function() use($app) {
     $location = $_GET['location'];
     $page = $_GET['page'];
