@@ -115,10 +115,10 @@ $app->get('/reset/', function () use ($app) {
 $app->post('/visit/', function () use ($app) {
 
     // the URI being requested (e.g. /about) minus any query parameters
-    $content = new $request->getPathInfo();
+    $request->getPathInfo();
 
     // retrieve $_GET and $_POST variables respectively
-    //$content = $request->request->get('body');
+    $request->request->get('body');
 
     /*$location = $_POST['location'];
     $page = $_POST['page'];
@@ -131,7 +131,7 @@ $app->post('/visit/', function () use ($app) {
     $st = $app['pdo']->prepare($query);
     $st->execute();*/
 
-    $response = new Response();
+    $response = new Response(json_encode($request));
     $response->setContent($content);
     $response->setStatusCode(Response::HTTP_OK);
 
