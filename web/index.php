@@ -113,19 +113,19 @@ $app->get('/reset/', function() use($app) {
 });
 
  $app->post('/visit/', function() use($app) {
-    $location = $_POST['location'];
+    /*$location = $_POST['location'];
     $page = $_POST['page'];
     $browser = $_POST['browser'];
-    $time = $_POST['time'];
+    $time = $_POST['time'];*/
 
     /*$query = "INSERT INTO visitors (location, page, browser, time) VALUES";
     $query .= " ('$location', '$page', '$browser', '$time');";
 
-    $st = $app['pdo']->prepare($query);*/
-    $st->execute();
+    $st = $app['pdo']->prepare($query);
+    $st->execute();*/
 
     $response = new Response();
-    $response->setContent($location);
+    $response->setContent(json_encode($_POST));
     $response->setStatusCode(Response::HTTP_OK);
     
     // set a HTTP response header
