@@ -121,7 +121,9 @@ $app->get('/reset/', function () use ($app) {
       [null, null, null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null, null, null]
   ]";
-    $query = $sql = "UPDATE gamedata SET active = 0, turn = 0, hits = 0, score = 0, shipdata = '$init', gamestate = '$init', timeout = 0;";
+    $query = "UPDATE gamedata SET active = 0, username = NULL, turn = -1, hits = 0, score = 0,";
+    $query .= " shipdata = '$init', gamestate = '$init', timeout = 0";
+    $query .= $_GET['id'] ? " WHERE id !=" . $_GET['id'] . ";" : ";";
 
     $st = $app['pdo']->prepare($query);
     $st->execute();

@@ -131,7 +131,7 @@ function KO() {
     } else {
         opponent.timeout = 0;
     }
-    writeData("active", opponent.id, 0);
+    resetData(opponent.id);
 }
 
 function activityHandling() {
@@ -293,6 +293,7 @@ function startGame() {
         label.innerHTML = "Waiting for Player 2";
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
         writeData("active", player.id, 1);
+        writeData("turn", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
         var int = setInterval(update, 500);
     } else {
@@ -309,13 +310,13 @@ function startOpponentPresent() {
         alert("Sorry, server is full. Check back later.");
         label.innerHTML = "Server full";
     } else {
-        console.log(player.shipdata);
         player.id = 1;
         opponent.id = 0;
         alert("Game has started. Opponent has first turn.")
         label.innerHTML = "Game has started.";
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
         writeData("active", player.id, 1);
+        writeData("turn", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
         readData(opponent.id, 'opponent', cgb);
         opponent.active = 1;

@@ -31,7 +31,7 @@ function readData(id, who, todo) {
 
 }
 
-function resetData() {
+function resetData(id) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -39,7 +39,11 @@ function resetData() {
             dbwrite = this.responseText;
         }
     };
-    xmlhttp.open("GET", "reset");
+    if (id) {
+        xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/reset?id=" + id);
+    } else {
+        xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/reset");
+    }
     xmlhttp.send();
     return;
 }
