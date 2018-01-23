@@ -14,7 +14,7 @@
         <h1>Battleships</h1>
     </header>
     <div class="container">
-        <div style="float: left" class="left">
+        <div class="left">
             <p>Score: <span id="score"></span></p>
             <p>Hits: <span id="hits"></span></p>
             <p>Turn: <span id="turn"></span></p>
@@ -26,11 +26,15 @@
             <button id="startButton">Start</button>
             <button id="randomButton">Random Board</button>
         </div>
-        <div style="float: right" class="right">
+        <div class="right">
             <p>Score: <span id="opscore"></span></p>
             <p>Hits: <span id="ophits"></span></p>
             <p>Turn: <span id="opturn"></span></p>
-            <h4>Opponent's board:</h4>
+            <h4>Online players:</h4>
+            <div id="select-container">
+                <select id="select" size ="20">
+                </select>
+            </div>
             <table id="gameBoard2">
 
             </table>
