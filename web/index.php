@@ -61,6 +61,30 @@ $app->get('/read/', function () use ($app) {
     $response->send();
 });
 
+$app->get('/getall/', function () use ($app) {
+    $query = "SELECT * from gamedata";
+    $query .= $_GET['id'] ? " WHERE id !=" . $_GET['id'] . ";" : ";";
+    $st = $app['pdo']->prepare($query);
+    $st->execute();
+    $data = null;
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['username']);
+        $row['shipdata'] = json_decode($row['shipdata']);
+        $row['gamestate'] = json_decode($row['gamestate']);
+        $data[] = $row;
+    }
+
+    $response = new Response();
+    $response->setContent(json_encode($data));
+    $response->setStatusCode(Response::HTTP_OK);
+
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+
+    // print the HTTP headers followed by the content
+    $response->send();
+});
+
 $app->get('/write/', function () use ($app) {
     $column = $_GET['column'];
     $id = intval($_GET['id']);
@@ -110,6 +134,49 @@ $app->get('/reset/', function () use ($app) {
 
     // print the HTTP headers followed by the content
     $response->send();
+});
+
+$app->post('/visit/', function () use ($app) {
+
+    $request = Request::createFromGlobals();
+
+    $content = $request->getContent();
+    $json = json_decode($content);
+
+    $location = $json->location;
+    $page = $json->page;
+    $browser = $json->browser;
+    $time = $json->time;
+    $ip = $json->ip;
+
+    $query = "INSERT INTO visits (location, page, browser, ip, time) VALUES";
+    $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
+
+    $st = $app['pdo']->prepare($query);
+    $st->execute();
+
+    $response = new Response();
+    $response->setContent("New record created successfully.\n" . json_encode($json));
+    $response->setStatusCode(Response::HTTP_OK);
+
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+
+    // print the HTTP headers followed by the content
+    $response->send();
+});
+
+$app->get('/visits/', function () use ($app) {
+    $st = $app['pdo']->prepare('SELECT * FROM visits;');
+    $st->execute();
+    $visits = array();
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['ip']);
+        $visits[] = $row;
+    }
+    return $app['twig']->render('visits.twig', array(
+        'visits' => $visits,
+    ));
 });
 
 $app->run();
