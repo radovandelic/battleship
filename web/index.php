@@ -63,7 +63,8 @@ $app->get('/read/', function () use ($app) {
 
 $app->get('/getall/', function () use ($app) {
     $query = "SELECT * from gamedata";
-    $query .= $_GET['id'] ? " WHERE id !=" . $_GET['id'] . ";" : ";";
+    $query .= $_GET['id'] ? " WHERE id !=" . $_GET['id'] : "";
+    $query .= " ORDER BY id;";
     $st = $app['pdo']->prepare($query);
     $st->execute();
     $data = null;
