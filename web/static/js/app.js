@@ -146,6 +146,7 @@ function update() {
         readData(opponent.id, 'opponent', writeGameProgress);
         readData(player.id, 'player', opponentMove);
     }
+    writeData('timeout', player.id, 0);
     //activityHandling();
 }
 function opponentMove() {
@@ -222,7 +223,7 @@ function randomShip(ship, size) {
         y = Math.floor(Math.random() * 10);
         while (x + size > 9) { x = Math.floor(Math.random() * 10); } // makes sure the boats don't go outside of board
         for (var i = 0; i < size; i++) {
-            if (player.shipdata[x + 1][y] != null) { randomShip(ship, size); return; }
+            if (player.shipdata[x + i][y] != null) { randomShip(ship, size); return; }
         }
         for (var i = 0; i < size; i++) {
             player.shipdata[x + i][y] = ship;
@@ -256,8 +257,6 @@ window.onload = function () {
     var ophits = document.getElementById("ophits");
     var opturn = document.getElementById("opturn");
     createGameBoard("gameBoard", player.shipdata);
-    createGameBoard("gameBoard2", init);
-    populateGameBoard(opponent.gamestate, "gameBoard2");
 
 
 };
@@ -270,9 +269,11 @@ randomButton.onclick = function () {
 
 var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
+    document.getElementById("select-container").innerHTML = "";
     if (JSON.stringify(player.shipdata) == JSON.stringify(init)) { randomShipData(); }
     createGameBoard("gameBoard", player.shipdata);
     if (opponent.active == 1) { createGameBoard("gameBoard2", opponent.shipdata); }
+    else { createGameBoard("gameBoard2", init); }
     populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
@@ -291,9 +292,9 @@ function startGame() {
         player.id = 0;
         opponent.id = 1;
         label.innerHTML = "Waiting for Player 2";
+        writeData("turn", player.id, 0);
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
         writeData("active", player.id, 1);
-        writeData("turn", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
         var int = setInterval(update, 500);
     } else {
@@ -314,9 +315,9 @@ function startOpponentPresent() {
         opponent.id = 0;
         alert("Game has started. Opponent has first turn.")
         label.innerHTML = "Game has started.";
+        writeData("turn", player.id, 0);
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
         writeData("active", player.id, 1);
-        writeData("turn", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
         readData(opponent.id, 'opponent', cgb);
         opponent.active = 1;
