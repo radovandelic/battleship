@@ -75,7 +75,7 @@ $app->get('/getall/', function () use ($app) {
         $data[] = $row['id'];
     }
 
-    $query = "SELECT * from gamedata WHERE active = 1";
+    $query = "SELECT * from gamedata WHERE active = 1 AND turn =0";
     $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
     $query .= " ORDER BY id;";
 

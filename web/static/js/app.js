@@ -44,6 +44,7 @@ var opponent = {
 */
 
 
+var selectedOpponent = -1;
 var ships = {
     C: {
         name: "Carrier",
@@ -246,6 +247,25 @@ function opponentJoin() {
     }
 }
 
+function populateLobby(playerList) {
+    select.innerHTML = "";
+    for (let index = 1; index < playerList.length; index++) {
+        if (playerList[index].id !== player.id) {
+            var option = document.createElement("option");
+            option.value = playerList[index].id;
+            option.innerHTML = playerList[index].username;
+            select.appendChild(option);
+        }
+    }
+    console.log(selectedOpponent);
+}
+
+function updatePlayerList() {
+    getAll((playerList) => {
+        populateLobby(playerList);
+    });
+}
+
 window.onload = function () {
     var label = document.getElementById("label");
     var turn = document.getElementById("turn");
@@ -255,13 +275,31 @@ window.onload = function () {
     var opscore = document.getElementById("opscore");
     var ophits = document.getElementById("ophits");
     var opturn = document.getElementById("opturn");
-    player.id = 0;
+    var select = document.getElementById("select");
+    select.onchange = (e) => {
+        selectedOpponent = e.target.value;
+    }
     createGameBoard("gameBoard", player.shipdata);
-    player.username = prompt("Please enter a username", "anonymous");
-    player.username = player.username.trim() ? player.username : "anonymous";
-    console.log(player.username);
-    getAll();
-    writeData(player);
+    player.username = prompt("Please enter a username", "Anonymous");
+    player.username = player.username.trim() ? player.username : "Anonymous";
+
+    getAll((playerList) => {
+        if (isNaN(playerList[0])) {
+            alert("Lobby is full, please check back later")
+        } else if (!playerList[1]) {
+            player.id = playerList[0];
+            var option = document.createElement("option");
+            option.value = "-1"
+            option.innerHTML = "Waiting for more player to join...";
+            select.appendChild(option);
+            writeData(player);
+        } else {
+            player.id = playerList[0];
+            populateLobby(playerList);
+            var updateInterval = setInterval(updatePlayerList, 5000);
+            writeData(player);
+        }
+    });
 
 
 };
@@ -312,6 +350,7 @@ function cgb() {
     populateGameBoard(init, "gameBoard2");
 }
 function startOpponentPresent() {
+    clearInterval(updateInterval);
     if (dbactive == 1) {
         alert("Sorry, server is full. Check back later.");
         label.innerHTML = "Server full";

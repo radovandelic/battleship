@@ -1,10 +1,8 @@
-const getAll = (id) => {
+const getAll = (callback) => {
     var url = "https://battleshipsjs.herokuapp.com/getall/";
-    url += id ? `?id=${id}` : "";
-    console.log(url);
     fetch("https://battleshipsjs.herokuapp.com/getall/", { method: 'GET' })
         .then(res => res.json())
-        .then(res => console.log(res))
+        .then(res => callback(res))
         .catch(err => console.log(err));
 }
 
