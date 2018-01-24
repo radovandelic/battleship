@@ -68,24 +68,26 @@ $app->get('/getall/', function () use ($app) {
 
     $st = $app['pdo']->prepare($query);
     $st->execute();
+
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
         $app['monolog']->addDebug('Row ' . $row['id']);
         $data[] = $row['id'];
     }
 
-    /*$query = "SELECT * from gamedata WHERE active = 1";
+    $query = "SELECT * from gamedata WHERE active = 1";
     $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
     $query .= " ORDER BY id;";
+
     $st = $app['pdo']->prepare($query);
     $st->execute();
-    $data = null;
+
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-    $app['monolog']->addDebug('Row ' . $row['id']);
-    $row['shipdata'] = json_decode($row['shipdata']);
-    $row['gamestate'] = json_decode($row['gamestate']);
-    $data[] = $row;
-    }*/
+        $app['monolog']->addDebug('Row ' . $row['id']);
+        $row['shipdata'] = json_decode($row['shipdata']);
+        $row['gamestate'] = json_decode($row['gamestate']);
+        $data[] = $row;
+    }
 
     $response = new Response();
     $response->setContent(json_encode($data));
