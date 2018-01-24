@@ -94,8 +94,9 @@ $app->post('/write/', function () use ($app) {
 
     $content = $request->getContent();
     $json = json_decode($content);
+    $json->gamestate = json_encode($json->gamestate);
 
-    $query = "UPDATE gamedata SET username = " . json_encode($json->gamestate);
+    $query = "UPDATE gamedata SET username = '$json->gamestate'";
     /* active, turn, hits, score, gamestate, shipdata, timeout) VALUES";
     $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
 
