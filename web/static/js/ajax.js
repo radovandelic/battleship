@@ -17,15 +17,15 @@ function writeData(column, id, value) {
     xmlhttp.send();
 }
 
-const writeData = (object) => {
+/*const writeData = (object) => {
     var options = {
-        method = 'POST',
+        method: 'POST',
         body: JSON.stringify(object)
     }
     fetch(`https://battleshipsjs.herokuapp.com/write/?id=${object.id}`, options)
         .then(res => res.json())
         .then(res => console.log(res));
-}
+}*/
 
 function readData(id, who, todo) {
     var xmlhttp = new XMLHttpRequest();
