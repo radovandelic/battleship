@@ -1,5 +1,4 @@
 const getAll = (callback) => {
-    var url = "https://battleshipsjs.herokuapp.com/getall/";
     fetch("https://battleshipsjs.herokuapp.com/getall/", { method: 'GET' })
         .then(res => res.json())
         .then(res => callback(res))
@@ -30,8 +29,16 @@ const writeData = (object) => {
 
 }
 
-function readData(id, who, todo) {
-    var xmlhttp = new XMLHttpRequest();
+function readData(object, todo) {
+    fetch("https://battleshipsjs.herokuapp.com/read/?id=" + object.id, { method: 'GET' })
+        .then(res => res.json())
+        .then(res => {
+            object = res;
+            if (todo) todo(res);
+        })
+        .catch(err => console.log(err));
+
+    /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
 
@@ -39,6 +46,7 @@ function readData(id, who, todo) {
                 var object = JSON.parse(this.responseText);
                 dbactive = object.active == 0 ? 0 : dbactive;
             } else if (who === 'opponent') {
+                console.log(this.responseText);
                 opponent = JSON.parse(this.responseText);
             } else {
 
@@ -48,7 +56,7 @@ function readData(id, who, todo) {
         }
     };
     xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/read/?id=" + id, true);
-    xmlhttp.send();
+    xmlhttp.send();*/
 
 }
 

@@ -1,5 +1,6 @@
 var dbactive = -1;
 var updateInterval = null;
+var select = document.getElementById("select");
 
 var init = [
     [null, null, null, null, null, null, null, null, null, null],
@@ -138,15 +139,15 @@ function KO() {
 
 function activityHandling() {
     writeData("active", player.id, 1);
-    if (Math.random > 0.5) { readData(opponent.id, 'opponent', KO); }
+    if (Math.random > 0.5) { readData(opponent, KO); }
 }
 
 function update() {
     if (opponent.active == 0) {
-        readData(opponent.id, 'opponent', opponentJoin);
+        readData(opponent, opponentJoin);
     } else {
-        readData(opponent.id, 'opponent', writeGameProgress);
-        readData(player.id, 'player', opponentMove);
+        readData(opponent, writeGameProgress);
+        readData(player, opponentMove);
     }
     writeData('timeout', player.id, 0);
     //activityHandling();
@@ -161,7 +162,7 @@ function calcScore() {
 }
 
 function writeGameProgress() {
-    readData(opponent.id, 'opponent', calcScore);
+    readData(opponent, calcScore);
     score.innerHTML = player.score;
     hits.innerHTML = player.hits;
     turn.innerHTML = (player.turn + 1);
@@ -243,7 +244,7 @@ function randomShip(ship, size) {
 }
 function opponentJoin() {
     if (opponent.active == 1) {
-        readData(opponent.id, 'opponent', cgb);
+        readData(opponent, cgb);
         alert("Opponent has joined the game. You have the first turn.");
         label.innerHTML = "Game has started";
     }
@@ -251,12 +252,22 @@ function opponentJoin() {
 
 function populateLobby(playerList) {
     select.innerHTML = "";
-    for (let index = 1; index < playerList.length; index++) {
-        if (playerList[index].id !== player.id) {
-            var option = document.createElement("option");
-            option.value = playerList[index].id;
-            option.innerHTML = playerList[index].username;
-            select.appendChild(option);
+    if (!playerList[1]) {
+        player.id = playerList[0];
+        var option = document.createElement("option");
+        option.value = "-1"
+        option.innerHTML = "Waiting for more players to join...";
+        select.appendChild(option);
+        updateInterval = setInterval(updatePlayerList, 5000);
+    } else {
+        for (let index = 1; index < playerList.length; index++) {
+            if (playerList[index].id !== player.id) {
+                var option = document.createElement("option");
+                option.value = playerList[index].id;
+                option.innerHTML = playerList[index].username;
+                select.appendChild(option);
+                console.log("lobby");
+            }
         }
     }
 }
@@ -267,6 +278,7 @@ function updatePlayerList() {
     });
 }
 
+
 window.onload = function () {
     var label = document.getElementById("label");
     var turn = document.getElementById("turn");
@@ -276,9 +288,9 @@ window.onload = function () {
     var opscore = document.getElementById("opscore");
     var ophits = document.getElementById("ophits");
     var opturn = document.getElementById("opturn");
-    var select = document.getElementById("select");
     select.onchange = (e) => {
-        opponent.id = e.target.value;
+        player.opponent = e.target.value;
+        opponent.id = player.opponent;
     }
     createGameBoard("gameBoard", player.shipdata);
     player.username = prompt("Please enter a username", "Anonymous");
@@ -292,13 +304,14 @@ window.onload = function () {
             writeData(player);
             var option = document.createElement("option");
             option.value = "-1"
-            option.innerHTML = "Waiting for more player to join...";
+            option.innerHTML = "Waiting for more players to join...";
             select.appendChild(option);
+            updateInterval = setInterval(updatePlayerList, 3000);
         } else {
             player.id = playerList[0];
             writeData(player);
             populateLobby(playerList);
-            updateInterval = setInterval(updatePlayerList, 5000);
+            updateInterval = setInterval(updatePlayerList, 3000);
         }
     });
 
@@ -311,9 +324,18 @@ randomButton.onclick = function () {
     if (player.id != -1) { writeData(player); }
 }
 
+function updateOpponentAccepted() {
+    console.log("waiting confirmation");
+    readData(opponent, () => {
+        if (opponent.opponent === player.id) {
+            clearInterval(updateInterval);
+        }
+    });
+}
+
 var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
-    clearInterval(updateInterval);
+    updateInterval = setInterval(updateOpponentAccepted, 1000);
     document.getElementById("select-container").innerHTML = "";
     document.getElementById("opponent-text").innerHTML = "Opponent's board";
     if (JSON.stringify(player.shipdata) == JSON.stringify(init)) { randomShipData(); }
@@ -323,7 +345,7 @@ startButton.onclick = function () {
     populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
-    readData(1, 'opponent', startGame);
+    readData(opponent, startGame);
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
     populateGameBoard(gameState, "gameBoard2");
@@ -339,7 +361,7 @@ function startGame() {
     alert("Game has started. Opponent has first turn.");
     label.innerHTML = "Game has started.";
     writeData(opponent);
-    readData(opponent.id, 'opponent', cgb);
+    readData(opponent, cgb);
     opponent.active = 1;
     var int = setInterval(update, 500);
 
@@ -357,7 +379,7 @@ function startGame() {
     }*/
 }
 function cgb() {
-    if (player.id == 1) readData(player.id, 'player', console.log);
+    if (player.id == 1) readData(player, console.log);
     createGameBoard("gameBoard2", opponent.shipdata);
     populateGameBoard(init, "gameBoard2");
 }
@@ -374,7 +396,7 @@ function startOpponentPresent() {
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
         writeData("active", player.id, 1);
         writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
-        readData(opponent.id, 'opponent', cgb);
+        readData(opponent, cgb);
         opponent.active = 1;
         var int = setInterval(update, 500);
     }

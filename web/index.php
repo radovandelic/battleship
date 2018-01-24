@@ -134,36 +134,6 @@ $app->post('/write/', function () use ($app) {
     $response->send();
 });
 
-$app->post('/visit/', function () use ($app) {
-
-    $request = Request::createFromGlobals();
-
-    $content = $request->getContent();
-    $json = json_decode($content);
-
-    $location = $json->location;
-    $page = $json->page;
-    $browser = $json->browser;
-    $time = $json->time;
-    $ip = $json->ip;
-
-    $query = "INSERT INTO visits (location, page, browser, ip, time) VALUES";
-    $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
-
-    $st = $app['pdo']->prepare($query);
-    $st->execute();
-
-    $response = new Response();
-    $response->setContent("New record created successfully.\n" . json_encode($json));
-    $response->setStatusCode(Response::HTTP_OK);
-
-    // set a HTTP response header
-    $response->headers->set('Content-Type', 'text/html');
-
-    // print the HTTP headers followed by the content
-    $response->send();
-});
-
 $app->get('/reset/', function () use ($app) {
     $init = "[
       [null, null, null, null, null, null, null, null, null, null],
