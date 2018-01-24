@@ -64,18 +64,28 @@ $app->get('/read/', function () use ($app) {
 
 $app->get('/getall/', function () use ($app) {
 
-    $query = "SELECT * from gamedata WHERE active = 1";
+    $query = "SELECT id from gamedata WHERE active = 0 ORDER BY id LIMIT 1";
+
+    $st = $app['pdo']->prepare($query);
+    $st->execute();
+    $data = null;
+    while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+        $app['monolog']->addDebug('Row ' . $row['id']);
+        $data[] = $row['id'];
+    }
+
+    /*$query = "SELECT * from gamedata WHERE active = 1";
     $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
     $query .= " ORDER BY id;";
     $st = $app['pdo']->prepare($query);
     $st->execute();
     $data = null;
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-        $app['monolog']->addDebug('Row ' . $row['username']);
-        $row['shipdata'] = json_decode($row['shipdata']);
-        $row['gamestate'] = json_decode($row['gamestate']);
-        $data[] = $row;
-    }
+    $app['monolog']->addDebug('Row ' . $row['id']);
+    $row['shipdata'] = json_decode($row['shipdata']);
+    $row['gamestate'] = json_decode($row['gamestate']);
+    $data[] = $row;
+    }*/
 
     $response = new Response();
     $response->setContent(json_encode($data));
@@ -111,7 +121,7 @@ $app->post('/write/', function () use ($app) {
     $st->execute();
 
     $response = new Response();
-    $response->setContent(json_encode($query));
+    $response->setContent(json_encode("Gamestate updated"));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header

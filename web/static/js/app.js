@@ -257,8 +257,11 @@ window.onload = function () {
     var opturn = document.getElementById("opturn");
     player.id = 0;
     createGameBoard("gameBoard", player.shipdata);
-    writeData(player);
+    player.username = prompt("Please enter a username", "anonymous");
+    player.username = player.username.trim() ? player.username : "anonymous";
+    console.log(player.username);
     getAll();
+    writeData(player);
 
 
 };

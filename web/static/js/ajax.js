@@ -1,9 +1,11 @@
 const getAll = (id) => {
     var url = "https://battleshipsjs.herokuapp.com/getall/";
     url += id ? `?id=${id}` : "";
-    fetch(url)
+    console.log(url);
+    fetch("https://battleshipsjs.herokuapp.com/getall/", { method: 'GET' })
         .then(res => res.json())
-        .then(res => console.log(res));
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
 }
 
 /*function writeData(column, id, value) {
@@ -24,7 +26,10 @@ const writeData = (object) => {
     }
     fetch(`https://battleshipsjs.herokuapp.com/write/?id=${object.id}`, options)
         .then(res => res.text())
-        .then(res => console.log(res));
+        .then(res => {
+            console.log(res);
+        });
+
 }
 
 function readData(id, who, todo) {
