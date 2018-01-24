@@ -63,8 +63,10 @@ $app->get('/read/', function () use ($app) {
 });
 
 $app->get('/getall/', function () use ($app) {
-    $query = "SELECT * from gamedata";
-    $query .= $_GET['id'] ? " WHERE id !=" . $_GET['id'] : "";
+    $request = Request::createFromGlobals();
+
+    $query = "SELECT * from gamedata WHERE active = 1";
+    $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
     $query .= " ORDER BY id;";
     $st = $app['pdo']->prepare($query);
     $st->execute();
