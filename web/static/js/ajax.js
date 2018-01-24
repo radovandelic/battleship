@@ -3,7 +3,7 @@ const getAll = (id) => {
     url += id ? `id=${id}` : "";
     fetch(url)
         .then(res => res.json())
-        .then(res => console.log(res[0]['id']));
+        .then(res => console.log(res));
 }
 
 /*function writeData(column, id, value) {

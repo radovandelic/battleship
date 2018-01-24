@@ -95,8 +95,8 @@ $app->post('/write/', function () use ($app) {
     $content = $request->getContent();
     $json = json_decode($content);
 
-    /*$gamestate = $json->gamestate;
-    $page = $json->page;
+    $gamestate = $json->gamestate;
+    /*$page = $json->page;
     $browser = $json->browser;
     $time = $json->time;
     $ip = $json->ip;
