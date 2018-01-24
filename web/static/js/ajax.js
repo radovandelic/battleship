@@ -1,3 +1,11 @@
+const getAll = (id) => {
+    var url = "https://battleshipsjs.herokuapp.com/getall/";
+    url += id ? `id=${id}` : "";
+    fetch(url)
+        .then(res => res.json())
+        .then(res => console.log(res[0]['id']));
+}
+
 function writeData(column, id, value) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -7,6 +15,16 @@ function writeData(column, id, value) {
     };
     xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/write/?column=" + column + "&id=" + id + "&value=" + value, true);
     xmlhttp.send();
+}
+
+const writeData = (object) => {
+    var options = {
+        method = 'POST',
+        body: JSON.stringify(object)
+    }
+    fetch(`https://battleshipsjs.herokuapp.com/write/?id=${object.id}`, options)
+        .then(res => res.json())
+        .then(res => console.log(res));
 }
 
 function readData(id, who, todo) {
@@ -36,7 +54,6 @@ function resetData(id) {
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log(this.responseText);//
-            dbwrite = this.responseText;
         }
     };
     if (id) {

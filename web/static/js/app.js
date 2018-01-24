@@ -1,4 +1,3 @@
-var dbwrite = "";
 var dbactive = -1;
 
 var init = [
@@ -257,6 +256,7 @@ window.onload = function () {
     var ophits = document.getElementById("ophits");
     var opturn = document.getElementById("opturn");
     createGameBoard("gameBoard", player.shipdata);
+    getAll();
 
 
 };
