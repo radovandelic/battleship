@@ -63,7 +63,6 @@ $app->get('/read/', function () use ($app) {
 });
 
 $app->get('/getall/', function () use ($app) {
-    $request = Request::createFromGlobals();
 
     $query = "SELECT * from gamedata WHERE active = 1";
     $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
@@ -89,19 +88,57 @@ $app->get('/getall/', function () use ($app) {
     $response->send();
 });
 
-$app->get('/write/', function () use ($app) {
-    $column = $_GET['column'];
-    $id = intval($_GET['id']);
-    $value = $_GET['value'];
-    if (!is_numeric($value)) {$value = "'$value'";}
+$app->post('/write/', function () use ($app) {
 
-    $query = "UPDATE gamedata SET $column = $value WHERE id = $id;";
+    $request = Request::createFromGlobals();
+
+    $content = $request->getContent();
+    $json = json_decode($content);
+
+    /*$location = $json->location;
+    $page = $json->page;s
+    $browser = $json->browser;
+    $time = $json->time;
+    $ip = $json->ip;
+
+    $query = "INSERT INTO visits (location, page, browser, ip, time) VALUES";
+    $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
+
+    $st = $app['pdo']->prepare($query);
+    $st->execute();*/
+
+    $response = new Response();
+    $response->setContent("New record created successfully.\n" . json_encode($content));
+    $response->setStatusCode(Response::HTTP_OK);
+
+    // set a HTTP response header
+    $response->headers->set('Content-Type', 'text/html');
+
+    // print the HTTP headers followed by the content
+    $response->send();
+});
+
+$app->post('/visit/', function () use ($app) {
+
+    $request = Request::createFromGlobals();
+
+    $content = $request->getContent();
+    $json = json_decode($content);
+
+    $location = $json->location;
+    $page = $json->page;
+    $browser = $json->browser;
+    $time = $json->time;
+    $ip = $json->ip;
+
+    $query = "INSERT INTO visits (location, page, browser, ip, time) VALUES";
+    $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
 
     $st = $app['pdo']->prepare($query);
     $st->execute();
 
     $response = new Response();
-    $response->setContent("New record created successfully.");
+    $response->setContent("New record created successfully.\n" . json_encode($json));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header
