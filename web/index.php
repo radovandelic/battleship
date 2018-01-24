@@ -95,20 +95,15 @@ $app->post('/write/', function () use ($app) {
     $content = $request->getContent();
     $json = json_decode($content);
 
-    $gamestate = $json->gamestate;
-    /*$page = $json->page;
-    $browser = $json->browser;
-    $time = $json->time;
-    $ip = $json->ip;
-
-    $query = "INSERT INTO visits (location, page, browser, ip, time) VALUES";
+    $query = "UPDATE gamedata SET username = $json->gamestate";
+    /* active, turn, hits, score, gamestate, shipdata, timeout) VALUES";
     $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
 
     $st = $app['pdo']->prepare($query);
     $st->execute();*/
 
     $response = new Response();
-    $response->setContent(json_encode($gamestate));
+    $response->setContent(json_encode($query));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header
