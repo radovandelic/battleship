@@ -23,7 +23,7 @@ const writeData = (object) => {
         body: JSON.stringify(object)
     }
     fetch(`https://battleshipsjs.herokuapp.com/write/?id=${object.id}`, options)
-        .then(res => res.test())
+        .then(res => res.text())
         .then(res => console.log(res));
 }
 
