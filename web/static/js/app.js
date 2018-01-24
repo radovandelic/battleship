@@ -1,4 +1,5 @@
 var dbactive = -1;
+var updateInterval = null;
 
 var init = [
     [null, null, null, null, null, null, null, null, null, null],
@@ -21,7 +22,8 @@ var player = {
     score: 0,
     shipdata: JSON.parse(JSON.stringify(init)),
     gamestate: JSON.parse(JSON.stringify(init)),
-    timeout: 0
+    timeout: 0,
+    opponent: -1
 };
 
 var opponent = {
@@ -33,7 +35,8 @@ var opponent = {
     score: 0,
     shipdata: JSON.parse(JSON.stringify(init)),
     gamestate: JSON.parse(JSON.stringify(init)),
-    timeout: 0
+    timeout: 0,
+    opponent: -1
 };
 
 /* Carrier - 5 hits
@@ -44,7 +47,6 @@ var opponent = {
 */
 
 
-var selectedOpponent = -1;
 var ships = {
     C: {
         name: "Carrier",
@@ -257,7 +259,6 @@ function populateLobby(playerList) {
             select.appendChild(option);
         }
     }
-    console.log(selectedOpponent);
 }
 
 function updatePlayerList() {
@@ -277,7 +278,7 @@ window.onload = function () {
     var opturn = document.getElementById("opturn");
     var select = document.getElementById("select");
     select.onchange = (e) => {
-        selectedOpponent = e.target.value;
+        opponent.id = e.target.value;
     }
     createGameBoard("gameBoard", player.shipdata);
     player.username = prompt("Please enter a username", "Anonymous");
@@ -288,16 +289,16 @@ window.onload = function () {
             alert("Lobby is full, please check back later")
         } else if (!playerList[1]) {
             player.id = playerList[0];
+            writeData(player);
             var option = document.createElement("option");
             option.value = "-1"
             option.innerHTML = "Waiting for more player to join...";
             select.appendChild(option);
-            writeData(player);
         } else {
             player.id = playerList[0];
-            populateLobby(playerList);
-            var updateInterval = setInterval(updatePlayerList, 5000);
             writeData(player);
+            populateLobby(playerList);
+            updateInterval = setInterval(updatePlayerList, 5000);
         }
     });
 
@@ -307,12 +308,14 @@ var randomButton = document.getElementById("randomButton");
 randomButton.onclick = function () {
     randomShipData();
     createGameBoard("gameBoard", player.shipdata);
-    if (player.id != -1) { writeData("shipdata", player.id, player.shipdata); }
+    if (player.id != -1) { writeData(player); }
 }
 
 var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
+    clearInterval(updateInterval);
     document.getElementById("select-container").innerHTML = "";
+    document.getElementById("opponent-text").innerHTML = "Opponent's board";
     if (JSON.stringify(player.shipdata) == JSON.stringify(init)) { randomShipData(); }
     createGameBoard("gameBoard", player.shipdata);
     if (opponent.active == 1) { createGameBoard("gameBoard2", opponent.shipdata); }
@@ -320,8 +323,7 @@ startButton.onclick = function () {
     populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
-    writeData("shipdata", player.id, JSON.stringify(player.shipdata));
-    readData(0, 'start', startGame);
+    readData(1, 'opponent', startGame);
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
     populateGameBoard(gameState, "gameBoard2");
@@ -331,10 +333,20 @@ startButton.onclick = function () {
 };
 
 function startGame() {
-    if (dbactive == 0) {
+    document.getElementById("opponent-text").innerHTML = `${opponent.username}'s board`;
+    label.innerHTML = `Waiting for ${opponent.username} to respont to invite...`;
+
+    alert("Game has started. Opponent has first turn.");
+    label.innerHTML = "Game has started.";
+    writeData(opponent);
+    readData(opponent.id, 'opponent', cgb);
+    opponent.active = 1;
+    var int = setInterval(update, 500);
+
+    /*if (dbactive == 0) {
         player.id = 0;
         opponent.id = 1;
-        label.innerHTML = "Waiting for Player 2";
+        label.innerHTML = "Waiting for ";
         writeData("turn", player.id, 0);
         writeData("shipdata", player.id, JSON.stringify(player.shipdata));
         writeData("active", player.id, 1);
@@ -342,7 +354,7 @@ function startGame() {
         var int = setInterval(update, 500);
     } else {
         startOpponentPresent();
-    }
+    }*/
 }
 function cgb() {
     if (player.id == 1) readData(player.id, 'player', console.log);
@@ -350,7 +362,6 @@ function cgb() {
     populateGameBoard(init, "gameBoard2");
 }
 function startOpponentPresent() {
-    clearInterval(updateInterval);
     if (dbactive == 1) {
         alert("Sorry, server is full. Check back later.");
         label.innerHTML = "Server full";

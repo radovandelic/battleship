@@ -75,7 +75,7 @@ $app->get('/getall/', function () use ($app) {
         $data[] = $row['id'];
     }
 
-    $query = "SELECT * from gamedata WHERE active = 1 AND turn =0";
+    $query = "SELECT * from gamedata WHERE active = 1 AND opponent = -1";
     $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
     $query .= " ORDER BY id;";
 
@@ -116,6 +116,7 @@ $app->post('/write/', function () use ($app) {
     $query .= "score = $json->score, ";
     $query .= "gamestate = '$json->gamestate', ";
     $query .= "shipdata = '$json->shipdata', ";
+    $query .= $json->opponent ? "opponent = '$json->opponent', " : "";
     $query .= "timeout = $json->timeout ";
     $query .= "WHERE id = $json->id;";
 
@@ -177,7 +178,7 @@ $app->get('/reset/', function () use ($app) {
       [null, null, null, null, null, null, null, null, null, null]
   ]";
     $query = "UPDATE gamedata SET active = 0, username = NULL, turn = -1, hits = 0, score = 0,";
-    $query .= " shipdata = '$init', gamestate = '$init', timeout = 0";
+    $query .= " shipdata = '$init', gamestate = '$init', timeout = 0, opponent = -1";
     $query .= $_GET['id'] ? " WHERE id !=" . $_GET['id'] . ";" : ";";
 
     $st = $app['pdo']->prepare($query);
