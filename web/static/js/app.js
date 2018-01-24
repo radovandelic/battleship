@@ -256,7 +256,7 @@ window.onload = function () {
     var ophits = document.getElementById("ophits");
     var opturn = document.getElementById("opturn");
     createGameBoard("gameBoard", player.shipdata);
-    console.log(player);
+    writeData(player);
     getAll();
 
 

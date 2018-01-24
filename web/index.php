@@ -95,8 +95,8 @@ $app->post('/write/', function () use ($app) {
     $content = $request->getContent();
     $json = json_decode($content);
 
-    /*$location = $json->location;
-    $page = $json->page;s
+    /*$gamestate = $json->gamestate;
+    $page = $json->page;
     $browser = $json->browser;
     $time = $json->time;
     $ip = $json->ip;
@@ -108,7 +108,7 @@ $app->post('/write/', function () use ($app) {
     $st->execute();*/
 
     $response = new Response();
-    $response->setContent(json_encode($content));
+    $response->setContent(json_encode($gamestate));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header

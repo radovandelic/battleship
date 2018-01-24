@@ -6,7 +6,7 @@ const getAll = (id) => {
         .then(res => console.log(res[0]['id']));
 }
 
-function writeData(column, id, value) {
+/*function writeData(column, id, value) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -15,17 +15,17 @@ function writeData(column, id, value) {
     };
     xmlhttp.open("GET", "https://battleshipsjs.herokuapp.com/write/?column=" + column + "&id=" + id + "&value=" + value, true);
     xmlhttp.send();
-}
+}*/
 
-/*const writeData = (object) => {
+const writeData = (object) => {
     var options = {
         method: 'POST',
         body: JSON.stringify(object)
     }
     fetch(`https://battleshipsjs.herokuapp.com/write/?id=${object.id}`, options)
         .then(res => res.json())
-        .then(res => console.log(res));
-}*/
+        .then(res => console.log(JSON.parse(res)));
+}
 
 function readData(id, who, todo) {
     var xmlhttp = new XMLHttpRequest();
