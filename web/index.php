@@ -1,6 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 require '../vendor/autoload.php';
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 $app = new Silex\Application();
