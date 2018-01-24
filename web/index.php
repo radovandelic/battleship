@@ -102,8 +102,8 @@ $app->post('/write/', function () use ($app) {
     $query .= "turn = $json->turn, ";
     $query .= "hits = $json->hits, ";
     $query .= "score = $json->score, ";
-    $query .= "gamestate = $json->gamestate, ";
-    $query .= "shipdata = $json->shipdata, ";
+    $query .= "gamestate = '$json->gamestate', ";
+    $query .= "shipdata = '$json->shipdata', ";
     $query .= "timeout = $json->timeout ";
     $query .= "WHERE id = $json->id;";
 

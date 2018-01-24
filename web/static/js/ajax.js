@@ -1,6 +1,6 @@
 const getAll = (id) => {
     var url = "https://battleshipsjs.herokuapp.com/getall/";
-    url += id ? `id=${id}` : "";
+    url += id ? `?id=${id}` : "";
     fetch(url)
         .then(res => res.json())
         .then(res => console.log(res));
