@@ -104,12 +104,11 @@ $app->post('/write/', function () use ($app) {
     $query .= "score = $json->score, ";
     $query .= "gamestate = $json->gamestate, ";
     $query .= "shipdata = $json->shipdata, ";
-    $query .= "timeout = $json->timeout;";
-    /* active, turn, hits, score, gamestate, shipdata, timeout) VALUES";
-    $query .= " ('$location', '$page', '$browser', '$ip', '$time');";
+    $query .= "timeout = $json->timeout ";
+    $query .= "WHERE id = $json->id;";
 
     $st = $app['pdo']->prepare($query);
-    $st->execute();*/
+    $st->execute();
 
     $response = new Response();
     $response->setContent(json_encode($query));

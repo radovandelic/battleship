@@ -15,7 +15,7 @@ var init = [
 var player = {
     id: -1,
     username: "",
-    active: 0,
+    active: 1,
     turn: 0,
     hits: 0,
     score: 0,
