@@ -64,7 +64,7 @@ $app->get('/read/', function () use ($app) {
 
 $app->get('/getall/', function () use ($app) {
 
-    $query = "SELECT id from gamedata WHERE active = 0 ORDER BY id LIMIT 1";
+    $query = "SELECT id from gamedata WHERE active = 0 ORDER BY id LIMIT 1;";
 
     $st = $app['pdo']->prepare($query);
     $st->execute();
@@ -75,7 +75,7 @@ $app->get('/getall/', function () use ($app) {
         $data[] = $row['id'];
     }
 
-    $query = "SELECT * from gamedata WHERE active = 1 AND opponent = -1";
+    $query = "SELECT * from gamedata WHERE active = 1";
     $query .= $_GET['id'] ? " AND id !=" . $_GET['id'] : "";
     $query .= " ORDER BY id;";
 

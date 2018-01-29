@@ -138,7 +138,7 @@ function KO() {
 }
 
 function activityHandling() {
-    writeData("active", player.id, 1);
+    writeData(player);
     if (Math.random > 0.5) { readData(opponent, KO); }
 }
 
@@ -149,7 +149,7 @@ function update() {
         readData(opponent, writeGameProgress);
         readData(player, opponentMove);
     }
-    writeData('timeout', player.id, 0);
+    writeData(player);
     //activityHandling();
 }
 function opponentMove() {
@@ -197,9 +197,8 @@ function play(cell) {
             }
             player.turn++;
             label.innerHTML = "Opponent's turn.";
-            writeData("turn", player.id, player.turn);
-            writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
-            writeData("hits", player.id, player.hits);
+            writeData(opponent);
+            writeData(player);
             writeGameProgress();
         }
         populateGameBoard(opponent.gamestate, "gameBoard2");
@@ -253,20 +252,23 @@ function opponentJoin() {
 function populateLobby(playerList) {
     select.innerHTML = "";
     if (!playerList[1]) {
-        player.id = playerList[0];
         var option = document.createElement("option");
-        option.value = "-1"
+        option.value = "-1";
         option.innerHTML = "Waiting for more players to join...";
         select.appendChild(option);
         updateInterval = setInterval(updatePlayerList, 5000);
     } else {
         for (let index = 1; index < playerList.length; index++) {
-            if (playerList[index].id !== player.id) {
+            console.log(playerList[index]);
+            if (playerList[index].id !== player.id && playerList[index].opponent == -1) {
                 var option = document.createElement("option");
                 option.value = playerList[index].id;
                 option.innerHTML = playerList[index].username;
                 select.appendChild(option);
                 console.log("lobby");
+            } else if (playerList[index].opponent == player.id) {
+                var invite = confirm(playerList[index].username + " is challenging you to a game. Do you accept?")
+                console.log(invite);
             }
         }
     }
@@ -325,9 +327,10 @@ randomButton.onclick = function () {
 }
 
 function updateOpponentAccepted() {
-    console.log("waiting confirmation");
     readData(opponent, () => {
+        console.log(opponent);
         if (opponent.opponent === player.id) {
+            console.log("Opponent has accepted");
             clearInterval(updateInterval);
         }
     });
@@ -345,6 +348,8 @@ startButton.onclick = function () {
     populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
+    console.log(player);
+    writeData(player);
     readData(opponent, startGame);
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
@@ -357,13 +362,13 @@ startButton.onclick = function () {
 function startGame() {
     document.getElementById("opponent-text").innerHTML = `${opponent.username}'s board`;
     label.innerHTML = `Waiting for ${opponent.username} to respont to invite...`;
-
-    alert("Game has started. Opponent has first turn.");
+    updateInterval = setInterval(updateOpponentAccepted, 500);
+    /*alert("Game has started. Opponent has first turn.");
     label.innerHTML = "Game has started.";
     writeData(opponent);
     readData(opponent, cgb);
     opponent.active = 1;
-    var int = setInterval(update, 500);
+    var int = setInterval(update, 500);*/
 
     /*if (dbactive == 0) {
         player.id = 0;
@@ -392,10 +397,8 @@ function startOpponentPresent() {
         opponent.id = 0;
         alert("Game has started. Opponent has first turn.")
         label.innerHTML = "Game has started.";
-        writeData("turn", player.id, 0);
-        writeData("shipdata", player.id, JSON.stringify(player.shipdata));
-        writeData("active", player.id, 1);
-        writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
+        writeData(opponent);
+        writeData(player);
         readData(opponent, cgb);
         opponent.active = 1;
         var int = setInterval(update, 500);
