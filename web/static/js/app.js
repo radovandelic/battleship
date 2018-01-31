@@ -139,15 +139,15 @@ function KO() {
 
 function activityHandling() {
     writeData(player);
-    if (Math.random > 0.5) { readData(opponent, KO); }
+    if (Math.random > 0.5) { readData("opponent", KO); }
 }
 
 function update() {
     if (opponent.active == 0) {
-        readData(opponent, opponentJoin);
+        readData("opponent", opponentJoin);
     } else {
-        readData(opponent, writeGameProgress);
-        readData(player, opponentMove);
+        readData("opponent", writeGameProgress);
+        readData("player", opponentMove);
     }
     writeData(player);
     //activityHandling();
@@ -162,7 +162,7 @@ function calcScore() {
 }
 
 function writeGameProgress() {
-    readData(opponent, calcScore);
+    readData("opponent", calcScore);
     score.innerHTML = player.score;
     hits.innerHTML = player.hits;
     turn.innerHTML = (player.turn + 1);
@@ -243,7 +243,7 @@ function randomShip(ship, size) {
 }
 function opponentJoin() {
     if (opponent.active == 1) {
-        readData(opponent, cgb);
+        readData("opponent", cgb);
         alert("Opponent has joined the game. You have the first turn.");
         label.innerHTML = "Game has started";
     }
@@ -256,7 +256,7 @@ function populateLobby(playerList) {
         option.value = "-1";
         option.innerHTML = "Waiting for more players to join...";
         select.appendChild(option);
-        updateInterval = setInterval(updatePlayerList, 5000);
+        //updateInterval = setInterval(updatePlayerList, 5000);
     } else {
         for (let index = 1; index < playerList.length; index++) {
             console.log(playerList[index]);
@@ -267,8 +267,17 @@ function populateLobby(playerList) {
                 select.appendChild(option);
                 console.log("lobby");
             } else if (playerList[index].opponent == player.id) {
-                var invite = confirm(playerList[index].username + " is challenging you to a game. Do you accept?")
-                console.log(invite);
+                var challenger = playerList[index].id;
+                console.log(challenger);
+                var accept = confirm(playerList[index].username + " is challenging you to a game. Do you accept?")
+                if (accept) {
+                    player.opponent = challenger;
+                    console.log(challenger);
+                    writeData(player);
+                }
+                else {
+                    //writeData
+                }
             }
         }
     }
@@ -327,8 +336,7 @@ randomButton.onclick = function () {
 }
 
 function updateOpponentAccepted() {
-    readData(opponent, () => {
-        console.log(opponent);
+    readData("opponent", () => {
         if (opponent.opponent === player.id) {
             console.log("Opponent has accepted");
             clearInterval(updateInterval);
@@ -338,8 +346,9 @@ function updateOpponentAccepted() {
 
 var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
+    writeData(player);
     updateInterval = setInterval(updateOpponentAccepted, 1000);
-    document.getElementById("select-container").innerHTML = "";
+    /*document.getElementById("select-container").innerHTML = "";
     document.getElementById("opponent-text").innerHTML = "Opponent's board";
     if (JSON.stringify(player.shipdata) == JSON.stringify(init)) { randomShipData(); }
     createGameBoard("gameBoard", player.shipdata);
@@ -348,9 +357,7 @@ startButton.onclick = function () {
     populateGameBoard(opponent.gamestate, "gameBoard2");
     randomButton.setAttribute("disabled", "true");
     startButton.setAttribute("disabled", "true");
-    console.log(player);
-    writeData(player);
-    readData(opponent, startGame);
+    readData(opponent, startGame);*/
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
     populateGameBoard(gameState, "gameBoard2");
@@ -361,7 +368,7 @@ startButton.onclick = function () {
 
 function startGame() {
     document.getElementById("opponent-text").innerHTML = `${opponent.username}'s board`;
-    label.innerHTML = `Waiting for ${opponent.username} to respont to invite...`;
+    label.innerHTML = `Waiting for ${opponent.username} to respond to invite...`;
     updateInterval = setInterval(updateOpponentAccepted, 500);
     /*alert("Game has started. Opponent has first turn.");
     label.innerHTML = "Game has started.";
@@ -384,7 +391,7 @@ function startGame() {
     }*/
 }
 function cgb() {
-    if (player.id == 1) readData(player, console.log);
+    if (player.id == 1) readData("player", console.log);
     createGameBoard("gameBoard2", opponent.shipdata);
     populateGameBoard(init, "gameBoard2");
 }
@@ -399,7 +406,7 @@ function startOpponentPresent() {
         label.innerHTML = "Game has started.";
         writeData(opponent);
         writeData(player);
-        readData(opponent, cgb);
+        readData("opponent", cgb);
         opponent.active = 1;
         var int = setInterval(update, 500);
     }

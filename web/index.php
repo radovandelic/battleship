@@ -195,7 +195,7 @@ $app->post('/visit/', function () use ($app) {
 });
 
 $app->get('/visits/', function () use ($app) {
-    $st = $app['pdo']->prepare('SELECT * FROM visits;');
+    $st = $app['pdo']->prepare('SELECT * FROM visits ORDER BY time DESC;');
     $st->execute();
     $visits = array();
     while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
