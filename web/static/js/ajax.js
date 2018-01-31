@@ -19,7 +19,8 @@ const writeData = (object) => {
 }
 
 function readData(who, todo) {
-    fetch("https://battleshipsjs.herokuapp.com/read/?id=" + [who].id, { method: 'GET' })
+    var id = who == 'opponent' ? opponent.id : player.id;
+    fetch("https://battleshipsjs.herokuapp.com/read/?id=" + id, { method: 'GET' })
         .then(res => res.json())
         .then(res => {
             if (who === 'opponent') {

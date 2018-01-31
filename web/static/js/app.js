@@ -1,6 +1,15 @@
 var dbactive = -1;
 var updateInterval = null;
+var label = document.getElementById("label");
+var turn = document.getElementById("turn");
+var score = document.getElementById("score");
+var hits = document.getElementById("hits");
+var turn = document.getElementById("turn");
+var opscore = document.getElementById("opscore");
+var ophits = document.getElementById("ophits");
+var opturn = document.getElementById("opturn");
 var select = document.getElementById("select");
+
 
 var init = [
     [null, null, null, null, null, null, null, null, null, null],
@@ -259,23 +268,22 @@ function populateLobby(playerList) {
         //updateInterval = setInterval(updatePlayerList, 5000);
     } else {
         for (let index = 1; index < playerList.length; index++) {
-            console.log(playerList[index]);
             if (playerList[index].id !== player.id && playerList[index].opponent == -1) {
                 var option = document.createElement("option");
                 option.value = playerList[index].id;
                 option.innerHTML = playerList[index].username;
                 select.appendChild(option);
-                console.log("lobby");
             } else if (playerList[index].opponent == player.id) {
+                //
                 var challenger = playerList[index].id;
-                console.log(challenger);
+                //console.log(challenger);
                 var accept = confirm(playerList[index].username + " is challenging you to a game. Do you accept?")
                 if (accept) {
+                    clearInterval(updateInterval);
                     player.opponent = challenger;
-                    console.log(challenger);
+                    opponent.id = challenger;
                     writeData(player);
-                }
-                else {
+                } else {
                     //writeData
                 }
             }
@@ -291,16 +299,10 @@ function updatePlayerList() {
 
 
 window.onload = function () {
-    var label = document.getElementById("label");
-    var turn = document.getElementById("turn");
-    var score = document.getElementById("score");
-    var hits = document.getElementById("hits");
-    var turn = document.getElementById("turn");
-    var opscore = document.getElementById("opscore");
-    var ophits = document.getElementById("ophits");
-    var opturn = document.getElementById("opturn");
+    startButton.setAttribute("disabled", "true");
     select.onchange = (e) => {
-        player.opponent = e.target.value;
+        startButton.disabled = false;
+        player.opponent = Number(e.target.value);
         opponent.id = player.opponent;
     }
     createGameBoard("gameBoard", player.shipdata);
@@ -336,17 +338,23 @@ randomButton.onclick = function () {
 }
 
 function updateOpponentAccepted() {
-    readData("opponent", () => {
-        if (opponent.opponent === player.id) {
-            console.log("Opponent has accepted");
-            clearInterval(updateInterval);
-        }
-    });
+    if (opponent.opponent === player.id) {
+        console.log("Opponent has accepted");
+        clearInterval(updateInterval);
+    }
+    /* readData("opponent", () => {
+         console.log(opponent);
+         if (opponent.opponent === player.id) {
+             console.log("Opponent has accepted");
+             clearInterval(updateInterval);
+         }
+     });*/
 }
 
 var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
     writeData(player);
+    clearInterval(updateInterval);
     updateInterval = setInterval(updateOpponentAccepted, 1000);
     /*document.getElementById("select-container").innerHTML = "";
     document.getElementById("opponent-text").innerHTML = "Opponent's board";
