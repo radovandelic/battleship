@@ -124,7 +124,7 @@ $app->post('/write/', function () use ($app) {
     $st->execute();
 
     $response = new Response();
-    $response->setContent(json_encode("Gamestate updated, $json->opponent"));
+    $response->setContent(json_encode("Gamestate updated"));
     $response->setStatusCode(Response::HTTP_OK);
 
     // set a HTTP response header

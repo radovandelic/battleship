@@ -9,6 +9,7 @@ var opscore = document.getElementById("opscore");
 var ophits = document.getElementById("ophits");
 var opturn = document.getElementById("opturn");
 var select = document.getElementById("select");
+var firstMove = -1;
 
 
 var init = [
@@ -81,16 +82,34 @@ var ships = {
 };
 function hasGameEnded(object) {
     if (object.hits >= 17) {
-        resetData();
+        clearInterval(updateInterval);
         message = (object.id == player.id) ?
             "Congrats, you win!" : "You lose!";
         alert(message);
-        var tds = document.getElementsByTagName("td");
-        for (var i = 0; i < tds.length; i++) {
-            tds[i].onclick = function () {
-                alert("The game has finished!");
-            }
+
+        player.opponent = -1;
+        player.shipdata = init;
+        player.gamestate = init;
+        player.hits = 0;
+        player.score = 0;
+        player.turn = 0;
+        createGameBoard("gameBoard", player.shipdata);
+        setTimeout(() => {
+            writeData(player);
+        }, 5000);
+
+        document.getElementById("gameBoard2").innerHTML = "";
+        select = document.createElement("select");
+        select.id = "select";
+        select.size = 20;
+        randomButton.disabled = false;
+        select.onchange = (e) => {
+            startButton.disabled = false;
+            player.opponent = Number(e.target.value);
+            opponent.id = player.opponent;
         }
+        document.getElementById("select-container").appendChild(select);
+        updateInterval = setInterval(updatePlayerList, 3000)
     }
 }
 function createGameBoard(gameBoard, shipData) {
@@ -152,17 +171,15 @@ function activityHandling() {
 }
 
 function update() {
-    if (opponent.active == 0) {
-        readData("opponent", opponentJoin);
-    } else {
-        readData("opponent", writeGameProgress);
-        readData("player", opponentMove);
-    }
-    writeData(player);
+    readData("opponent", writeGameProgress);
+    readData("player", opponentMove);
+    hasGameEnded(player);
+    hasGameEnded(opponent);
+    //writeData(player);
     //activityHandling();
 }
 function opponentMove() {
-    if ((player.turn + player.id) <= opponent.turn) { label.innerHTML = "Your turn"; }
+    if ((player.turn + firstMove) <= opponent.turn) { label.innerHTML = "Your turn"; }
     else { label.innerHTML = "Opponent's turn"; }
     populateGameBoard(player.gamestate, "gameBoard");
 }
@@ -183,7 +200,7 @@ function writeGameProgress() {
 function play(cell) {
     var col = cell.getAttribute("col");
     var row = cell.parentElement.getAttribute("row");
-    if ((player.turn + player.id) <= opponent.turn) {
+    if ((player.turn + firstMove) <= opponent.turn) {
         if (opponent.gamestate[row][col] == null && opponent.active == 1) {
             if (opponent.shipdata[row][col] !== null) {
                 alert("Hit!");
@@ -197,8 +214,6 @@ function play(cell) {
                 ship.hits--;
                 if (ship.hits == 0) { alert("You sunk my " + ship.name + "!"); }
 
-                hasGameEnded(opponent);
-                hasGameEnded(player);
             } else {
                 opponent.gamestate[row][col] = "~";
                 cell.setAttribute("class", "miss");
@@ -274,18 +289,21 @@ function populateLobby(playerList) {
                 option.innerHTML = playerList[index].username;
                 select.appendChild(option);
             } else if (playerList[index].opponent == player.id) {
-                //
-                var challenger = playerList[index].id;
-                //console.log(challenger);
-                var accept = confirm(playerList[index].username + " is challenging you to a game. Do you accept?")
-                if (accept) {
-                    clearInterval(updateInterval);
-                    player.opponent = challenger;
-                    opponent.id = challenger;
-                    writeData(player);
-                } else {
-                    //writeData
-                }
+
+                opponent.id = playerList[index].id;
+                readData("opponent", () => {
+                    var accept = confirm(playerList[index].username + " is challenging you to a game. Do you accept?")
+                    if (accept) {
+                        clearInterval(updateInterval);
+                        player.opponent = opponent.id;
+                        startGame();
+                        firstMove = 1;
+                        alert("Game has started. Opponent has the first move");
+                    } else {
+                        opponent.opponent = -1;
+                        writeData(opponent);
+                    }
+                });
             }
         }
     }
@@ -339,10 +357,18 @@ randomButton.onclick = function () {
 
 function updateOpponentAccepted() {
     readData("opponent", () => {
-        console.log(opponent);
         if (opponent.opponent === player.id) {
-            console.log("Opponent has accepted");
             clearInterval(updateInterval);
+            startGame();
+            firstMove = 0;
+            alert("Opponent has accepted. You have the first move.");
+        }
+    });
+    readData("player", () => {
+        if (player.opponent === -1) {
+            clearInterval(updateInterval);
+            alert("Opponent has rejected your invite.");
+            startButton.setAttribute("disabled", "true");
         }
     });
 }
@@ -351,17 +377,8 @@ var startButton = document.getElementById("startButton");
 startButton.onclick = function () {
     writeData(player);
     clearInterval(updateInterval);
+    label.innerHTML = `Waiting for opponent to respond to invite...`;
     updateInterval = setInterval(updateOpponentAccepted, 1000);
-    /*document.getElementById("select-container").innerHTML = "";
-    document.getElementById("opponent-text").innerHTML = "Opponent's board";
-    if (JSON.stringify(player.shipdata) == JSON.stringify(init)) { randomShipData(); }
-    createGameBoard("gameBoard", player.shipdata);
-    if (opponent.active == 1) { createGameBoard("gameBoard2", opponent.shipdata); }
-    else { createGameBoard("gameBoard2", init); }
-    populateGameBoard(opponent.gamestate, "gameBoard2");
-    randomButton.setAttribute("disabled", "true");
-    startButton.setAttribute("disabled", "true");
-    readData(opponent, startGame);*/
 
     /*writeData("shipdata", 0, JSON.stringify(shipData));
     populateGameBoard(gameState, "gameBoard2");
@@ -371,28 +388,16 @@ startButton.onclick = function () {
 };
 
 function startGame() {
+    document.getElementById("select-container").innerHTML = "";
     document.getElementById("opponent-text").innerHTML = `${opponent.username}'s board`;
-    label.innerHTML = `Waiting for ${opponent.username} to respond to invite...`;
-    updateInterval = setInterval(updateOpponentAccepted, 500);
-    /*alert("Game has started. Opponent has first turn.");
-    label.innerHTML = "Game has started.";
-    writeData(opponent);
-    readData(opponent, cgb);
-    opponent.active = 1;
-    var int = setInterval(update, 500);*/
-
-    /*if (dbactive == 0) {
-        player.id = 0;
-        opponent.id = 1;
-        label.innerHTML = "Waiting for ";
-        writeData("turn", player.id, 0);
-        writeData("shipdata", player.id, JSON.stringify(player.shipdata));
-        writeData("active", player.id, 1);
-        writeData("gamestate", opponent.id, JSON.stringify(opponent.gamestate));
-        var int = setInterval(update, 500);
-    } else {
-        startOpponentPresent();
-    }*/
+    if (JSON.stringify(player.shipdata) == JSON.stringify(init)) { randomShipData(); }
+    createGameBoard("gameBoard", player.shipdata);
+    createGameBoard("gameBoard2", opponent.shipdata);
+    populateGameBoard(opponent.gamestate, "gameBoard2");
+    randomButton.setAttribute("disabled", "true");
+    startButton.setAttribute("disabled", "true");
+    writeData(player);
+    updateInterval = setInterval(update, 500);
 }
 function cgb() {
     if (player.id == 1) readData("player", console.log);
