@@ -116,7 +116,7 @@ $app->post('/write/', function () use ($app) {
     $query .= "score = $json->score, ";
     $query .= "gamestate = '$json->gamestate', ";
     $query .= "shipdata = '$json->shipdata', ";
-    $query .= $json->opponent ? "opponent = $json->opponent, " : "";
+    $query .= "opponent = $json->opponent, ";
     $query .= "timeout = $json->timeout ";
     $query .= "WHERE id = $json->id;";
 
