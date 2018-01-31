@@ -338,17 +338,13 @@ randomButton.onclick = function () {
 }
 
 function updateOpponentAccepted() {
-    if (opponent.opponent === player.id) {
-        console.log("Opponent has accepted");
-        clearInterval(updateInterval);
-    }
-    /* readData("opponent", () => {
-         console.log(opponent);
-         if (opponent.opponent === player.id) {
-             console.log("Opponent has accepted");
-             clearInterval(updateInterval);
-         }
-     });*/
+    readData("opponent", () => {
+        console.log(opponent);
+        if (opponent.opponent === player.id) {
+            console.log("Opponent has accepted");
+            clearInterval(updateInterval);
+        }
+    });
 }
 
 var startButton = document.getElementById("startButton");
